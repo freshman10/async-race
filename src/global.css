@@ -2,3 +2,59 @@
     margin: 0;
     padding: 0;
 }
+
+.container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+}
+
+.container-crud {
+    padding-top: 20px;
+}
+
+.button {
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 1px 5px 5px 0px rgba(212, 148, 45, 0.51);
+    background-color: rgb(248, 228, 46);
+    font-size: 14px;
+}
+
+.button:hover {
+    box-shadow: 1px 7px 7px 0px rgba(212, 148, 45, 0.51);
+    background-color: rgb(214, 198, 52);
+    transition: 1s;
+    cursor: pointer;
+}
+
+.input {
+    height: 25px;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.input:hover {
+    cursor: pointer;
+}
+
+.button-generate {
+    width: 210px;
+}
+
+.button-generate,
+.button-create,
+.button-update {
+    background-color: rgb(232, 157, 28);
+}
+
+.container-track {
+    padding-top: 40px;
+}
+
+.label {
+    font-size: 24px;
+}

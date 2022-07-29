@@ -1,2 +1,8 @@
 import './global.css';
-console.log('hello');
+import renderPage from './render/renderPage';
+
+function startApplication() {
+    renderPage();
+}
+
+startApplication();
