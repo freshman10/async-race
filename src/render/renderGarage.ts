@@ -32,15 +32,16 @@ function renderCRUDBox(parentElement: HTMLElement): void {
     createElement('button', containerButtons, ['button', 'button-generate'], 'GENERATE CARS');
 }
 
-function renderGarageItems(parentElement: HTMLElement, items: number): void {
+export function renderItemsLabel(parentElement: HTMLElement, items: number, label: string): void {
     const containerGarageItems = createElement('div', parentElement, [CONTAINER]);
-    createElement('p', containerGarageItems, ['garage-items', 'label'], `Garage (${items})`);
+    createElement('p', containerGarageItems, [`${label}-items`, 'label'], `${label.toUpperCase()} (${items})`);
 }
 
-function renderPageNumber(parentElement: HTMLElement, pageNumber: number): void {
+export function renderPageNumber(parentElement: HTMLElement, pageNumber: number): void {
     const containerGarageItems = createElement('div', parentElement, [CONTAINER]);
     createElement('p', containerGarageItems, ['page-number', 'label'], `Page #${pageNumber}`);
 }
+
 function renderCar(parentElement: HTMLElement): void {
     const containerCar = createElement('div', parentElement, ['container-car']);
     const upperLine = createElement('div', containerCar, [CONTAINER]);
@@ -65,16 +66,16 @@ function renderCarFrame(parentElement: HTMLElement): void {
 
 function renderCarsTrack(parentElement: HTMLElement): void {
     const containerCarsTrack = createElement('div', parentElement, ['container-track']);
-    renderGarageItems(containerCarsTrack, 0);
+    renderItemsLabel(containerCarsTrack, 0, 'garage');
     renderPageNumber(containerCarsTrack, 0);
     const containerCarFrame = createElement('div', containerCarsTrack, ['container-cars']);
     renderCarFrame(containerCarFrame);
 }
 
 export function renderGarage(): void {
-    const containerGarage = createElement('div', document.body, ['garage']);
+    const containerGarage = createElement('div', document.body, ['garage', 'upper-layer']);
     renderCRUDBox(containerGarage);
     renderCarsTrack(containerGarage);
 }
 
-export default renderGarage;
+export default { renderGarage, renderPageNumber, renderItemsLabel };

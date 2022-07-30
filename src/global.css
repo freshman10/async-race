@@ -75,6 +75,36 @@
 .finish-image {
     position: absolute;
     top: 15px;
-    right: 50px;
+    right: 70px;
     width: 40px;
+}
+
+.split-layer {
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    height: 100%;
+    background-color: azure;
+    z-index: 0;
+}
+
+.upper-layer {
+    position: relative;
+    padding-left: 20px;
+    z-index: 1;
+}
+
+.go-top {
+    position: absolute;
+    top:60px;
+}
+
+.table-item {
+    text-align: center;
+    padding-left: 10px;
+}
+
+.inactive,
+.inactive:hover {
+    background-color: gray;
 }
