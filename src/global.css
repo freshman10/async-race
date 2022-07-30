@@ -58,3 +58,23 @@
 .label {
     font-size: 24px;
 }
+
+.car-image {
+    position: absolute;
+    top: 11px;
+    left: 100px;
+    width: 60px;
+}
+
+.bottom-container {
+    position: relative;
+    height: fit-content;
+    border-bottom: dotted 2px black;
+}
+
+.finish-image {
+    position: absolute;
+    top: 15px;
+    right: 50px;
+    width: 40px;
+}
