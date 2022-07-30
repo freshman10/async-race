@@ -21,7 +21,7 @@ function renderTable(parentElement: HTMLElement): void {
 
 function renderWinners(): void {
     const containerWinners = createElement('div', document.body, ['winners', 'go-top']);
-    renderItemsLabel(containerWinners, 0, 'winners');
+    renderItemsLabel(containerWinners, '0', 'winners');
     renderPageNumber(containerWinners, 0);
     renderTable(containerWinners);
 }

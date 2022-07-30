@@ -1,4 +1,5 @@
 import { CONTAINER, GARAGE_BUTTON_LABEL, WINNERS_BUTTON_LABEL } from '../constants/constants';
+import { CarsResponse } from '../constants/types';
 import { createElement } from './createHTMLelement';
 import { renderGarage } from './renderGarage';
 import renderWinners from './renderWinners';
@@ -13,9 +14,9 @@ function renderSplitLayer(): void {
     createElement('div', document.body, ['split-layer']);
 }
 
-export function renderPage(): void {
+export function renderPage(cars: Promise<CarsResponse>): void {
     renderTabs();
-    renderGarage();
+    renderGarage(cars);
     renderWinners();
     renderSplitLayer();
 }
