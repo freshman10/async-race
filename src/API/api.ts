@@ -1,5 +1,5 @@
 import { garage } from '../constants/constants';
-import { CarsResponse } from '../constants/types';
+import { Car, CarsResponse } from '../constants/types';
 
 export async function getCars(page: number, limit = 7): Promise<CarsResponse> {
     const response = await fetch(`${garage}?_page=${page}&_limit=${limit}`);
@@ -7,6 +7,23 @@ export async function getCars(page: number, limit = 7): Promise<CarsResponse> {
         items: await response.json(),
         count: response.headers.get('X-Total-Count'),
     };
+}
+
+export async function getCar(id: string): Promise<Car> {
+    const response = await fetch(`${garage}?_id${id}`);
+    return response.json();
+}
+
+export async function createCar(data: Car) {
+    return (
+        await fetch(garage, {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+    ).json();
 }
 
 export default getCars;

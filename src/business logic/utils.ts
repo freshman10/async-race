@@ -8,4 +8,19 @@ export function switchLayers(): void {
     });
 }
 
-export default { switchLayers };
+export function getInputData(target: string): string {
+    let data = '';
+    elementDomStorage.get(target)?.forEach((el) => {
+        data = (el as HTMLInputElement).value;
+    });
+    return data;
+}
+
+export function clearInputValue(target: string): void {
+    elementDomStorage.get(target)?.forEach((el) => {
+        const input = el;
+        (input as HTMLInputElement).value = '';
+    });
+}
+
+export default { switchLayers, getInputData };

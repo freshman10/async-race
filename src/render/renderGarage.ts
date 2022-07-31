@@ -16,47 +16,75 @@ function addCarSVGImage(parentElement: HTMLElement, color: string) {
 }
 
 function renderInputLine(parentElement: HTMLElement, inputPurpose: string): HTMLElement {
-    const containerInput = createElement('div', parentElement, [CONTAINER, `container-${inputPurpose}`]);
-    createElement('input', containerInput, ['input', `text-${inputPurpose}`], '', [['type', 'text']]);
-    createElement('input', containerInput, ['input', `color-${inputPurpose}`], '', [['type', 'color']]);
-    createElement('button', containerInput, ['button', `button-${inputPurpose}`], inputPurpose.toUpperCase());
+    const containerInput = createElement(
+        'div',
+        parentElement,
+        [CONTAINER, `container-${inputPurpose}`],
+        '',
+        [],
+        'garage'
+    );
+    createElement('input', containerInput, ['input', `text-${inputPurpose}`], '', [['type', 'text']], 'garage');
+    createElement('input', containerInput, ['input', `color-${inputPurpose}`], '', [['type', 'color']], 'garage');
+    createElement(
+        'button',
+        containerInput,
+        ['button', `button-${inputPurpose}`, 'inactive'],
+        inputPurpose.toUpperCase(),
+        [],
+        'garage'
+    );
     return containerInput;
 }
 
 function renderCRUDBox(parentElement: HTMLElement): void {
-    const containerCRUD = createElement('div', parentElement, [CRUD_CONTAINER_CLASS]);
+    const containerCRUD = createElement('div', parentElement, [CRUD_CONTAINER_CLASS], '', [], 'garage');
     renderInputLine(containerCRUD, 'create');
     renderInputLine(containerCRUD, 'update');
-    const containerButtons = createElement('div', containerCRUD, [CONTAINER]);
-    createElement('button', containerButtons, ['button', 'button-race'], 'RACE');
-    createElement('button', containerButtons, ['button', 'button-reset'], 'RESET');
-    createElement('button', containerButtons, ['button', 'button-generate'], 'GENERATE CARS');
+    const containerButtons = createElement('div', containerCRUD, [CONTAINER], '', [], 'garage');
+    createElement('button', containerButtons, ['button', 'button-race'], 'RACE', [], 'garage');
+    createElement('button', containerButtons, ['button', 'button-reset'], 'RESET', [], 'garage');
+    createElement('button', containerButtons, ['button', 'button-generate'], 'GENERATE CARS', [], 'garage');
 }
 
 export function renderItemsLabel(parentElement: HTMLElement, items: string | null, label: string): void {
-    const containerGarageItems = createElement('div', parentElement, [CONTAINER]);
-    createElement('p', containerGarageItems, [`${label}-items`, 'label'], `${label.toUpperCase()} (${items || '0'})`);
+    const containerGarageItems = createElement('div', parentElement, [CONTAINER], '', [], 'garage');
+    createElement(
+        'p',
+        containerGarageItems,
+        [`${label}-items`, 'label'],
+        `${label.toUpperCase()} (${items || '0'})`,
+        [],
+        'garage'
+    );
 }
 
 export function renderPageNumber(parentElement: HTMLElement, pageNumber: number): void {
-    const containerGarageItems = createElement('div', parentElement, [CONTAINER]);
-    createElement('p', containerGarageItems, ['page-number', 'label'], `Page #${pageNumber}`);
+    const containerGarageItems = createElement('div', parentElement, [CONTAINER], '', [], 'garage');
+    createElement('p', containerGarageItems, ['page-number', 'label'], `Page #${pageNumber}`, [], 'garage');
 }
 
 function renderCar(parentElement: HTMLElement, car: Car): void {
-    const containerCar = createElement('div', parentElement, ['container-car']);
-    const upperLine = createElement('div', containerCar, [CONTAINER]);
-    createElement('button', upperLine, ['button', 'button-select'], 'SELECT');
-    createElement('button', upperLine, ['button', 'button-remove'], 'REMOVE');
-    createElement('p', upperLine, ['car-name'], car.name);
-    const bottomLine = createElement('div', parentElement, [CONTAINER, 'bottom-container']);
-    createElement('button', bottomLine, ['button', 'button-start'], 'A');
-    createElement('button', bottomLine, ['button', 'button-stop'], 'B');
+    const containerCar = createElement('div', parentElement, ['container-car'], '', [], 'garage');
+    const upperLine = createElement('div', containerCar, [CONTAINER], '', [], 'garage');
+    createElement('button', upperLine, ['button', 'button-select'], 'SELECT', [['value', `${car.id || ''}`]], 'garage');
+    createElement('button', upperLine, ['button', 'button-remove'], 'REMOVE', [['value', `${car.id || ''}`]], 'garage');
+    createElement('p', upperLine, ['car-name'], car.name, [], 'garage');
+    const bottomLine = createElement('div', parentElement, [CONTAINER, 'bottom-container'], '', [], 'garage');
+    createElement('button', bottomLine, ['button', 'button-start'], 'A', [['value', `${car.id || ''}`]], 'garage');
+    createElement('button', bottomLine, ['button', 'button-stop'], 'B', [['value', `${car.id || ''}`]], 'garage');
     addCarSVGImage(bottomLine, car.color);
-    createElement('img', bottomLine, ['finish-image'], '', [
-        ['src', './assets/img/finish.png'],
-        ['alt', 'finish flag'],
-    ]);
+    createElement(
+        'img',
+        bottomLine,
+        ['finish-image'],
+        '',
+        [
+            ['src', './assets/img/finish.png'],
+            ['alt', 'finish flag'],
+        ],
+        'garage'
+    );
 }
 
 function renderCarFrame(parentElement: HTMLElement, cars: Car[]): void {
@@ -66,16 +94,16 @@ function renderCarFrame(parentElement: HTMLElement, cars: Car[]): void {
 }
 
 async function renderCarsTrack(parentElement: HTMLElement, cars: Promise<CarsResponse>): Promise<void> {
-    const containerCarsTrack = createElement('div', parentElement, ['container-track']);
+    const containerCarsTrack = createElement('div', parentElement, ['container-track'], '', [], 'garage');
     const data = await cars;
     renderItemsLabel(containerCarsTrack, data.count, 'garage');
     renderPageNumber(containerCarsTrack, state.page);
-    const containerCarFrame = createElement('div', containerCarsTrack, ['container-cars']);
+    const containerCarFrame = createElement('div', containerCarsTrack, ['container-cars'], '', [], 'garage');
     renderCarFrame(containerCarFrame, data.items);
 }
 
 export function renderGarage(cars: Promise<CarsResponse>): void {
-    const containerGarage = createElement('div', document.body, ['garage', 'upper-layer']);
+    const containerGarage = createElement('div', document.body, ['garage', 'upper-layer'], '', [], 'garage');
     renderCRUDBox(containerGarage);
     renderCarsTrack(containerGarage, cars);
 }

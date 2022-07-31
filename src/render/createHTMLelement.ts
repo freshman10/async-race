@@ -1,14 +1,28 @@
 import { STRING, WRONG_DATA } from '../constants/constants';
 
 export const elementDomStorage = new Map<string, HTMLElement[]>();
+export const tagsStorage = new Map<string, string[]>();
 
-export function addToDOMStorage(element: HTMLElement): void {
+function saveToMap<T, K>(map: Map<T, K[]>, key: T, value: K): void {
+    if (map.has(key)) {
+        map.get(key)?.push(value);
+    } else {
+        map.set(key, [value]);
+    }
+}
+
+export function clearDOMStorage(tag: string): void {
+    new Set(tagsStorage.get(tag))?.forEach((cls) => {
+        elementDomStorage.delete(cls);
+    });
+}
+
+export function addToDOMStorage(element: HTMLElement, tag?: string): void {
     if (element && element.classList) {
         element.classList.forEach((cls) => {
-            if (elementDomStorage.has(cls)) {
-                elementDomStorage.get(cls)?.push(element);
-            } else {
-                elementDomStorage.set(cls, [element]);
+            saveToMap(elementDomStorage, cls, element);
+            if (tag) {
+                saveToMap(tagsStorage, tag, cls);
             }
         });
     }
@@ -19,7 +33,8 @@ export function createElement(
     parentElement: HTMLElement,
     classes?: string[],
     text?: string,
-    attributes?: [string, string][]
+    attributes?: [string, string][],
+    tag?: string
 ): HTMLElement {
     if (type && parentElement && typeof type === STRING && parentElement instanceof HTMLElement) {
         const element: HTMLElement = document.createElement(type);
@@ -33,7 +48,7 @@ export function createElement(
             }
         }
         parentElement.appendChild(element);
-        addToDOMStorage(element);
+        addToDOMStorage(element, tag);
         return element;
     }
     throw new Error(WRONG_DATA);
