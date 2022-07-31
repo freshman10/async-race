@@ -4,9 +4,9 @@ import { state } from './constants/constants';
 import './global.css';
 import renderPage from './render/renderPage';
 
-function startApplication() {
+async function startApplication() {
     const cars = getCars(state.page);
-    renderPage(cars);
+    await renderPage(cars);
     addControls();
 }
 

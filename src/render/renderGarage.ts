@@ -102,10 +102,10 @@ async function renderCarsTrack(parentElement: HTMLElement, cars: Promise<CarsRes
     renderCarFrame(containerCarFrame, data.items);
 }
 
-export function renderGarage(cars: Promise<CarsResponse>): void {
+export async function renderGarage(cars: Promise<CarsResponse>): Promise<void> {
     const containerGarage = createElement('div', document.body, ['garage', 'upper-layer'], '', [], 'garage');
     renderCRUDBox(containerGarage);
-    renderCarsTrack(containerGarage, cars);
+    await renderCarsTrack(containerGarage, cars);
 }
 
 export default { renderGarage, renderPageNumber, renderItemsLabel };

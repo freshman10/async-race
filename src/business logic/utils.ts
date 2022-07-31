@@ -8,10 +8,10 @@ export function switchLayers(): void {
     });
 }
 
-export function getInputData(target: string): string {
+export function getInputData(target: string, isId?: boolean): string {
     let data = '';
     elementDomStorage.get(target)?.forEach((el) => {
-        data = (el as HTMLInputElement).value;
+        data = isId ? (el as HTMLInputElement).id : (el as HTMLInputElement).value;
     });
     return data;
 }

@@ -14,9 +14,9 @@ function renderSplitLayer(): void {
     createElement('div', document.body, ['split-layer']);
 }
 
-export function renderPage(cars: Promise<CarsResponse>): void {
+export async function renderPage(cars: Promise<CarsResponse>): Promise<void> {
     renderTabs();
-    renderGarage(cars);
+    await renderGarage(cars);
     renderWinners();
     renderSplitLayer();
 }
