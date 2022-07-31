@@ -1,5 +1,5 @@
 import { addNewCarButtonListener, addUpdateButtonListener, isEmptyInputListener } from './crud-box';
-import { addEventListenerSelectButton } from './garage';
+import { addEventListenerRemoveButton, addEventListenerSelectButton } from './garage';
 import listenTabs from './tabs';
 
 export function addControls(): void {
@@ -8,6 +8,7 @@ export function addControls(): void {
     isEmptyInputListener('text-create');
     addEventListenerSelectButton();
     addUpdateButtonListener();
+    addEventListenerRemoveButton();
 }
 
 export default addControls;

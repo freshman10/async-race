@@ -38,4 +38,13 @@ export async function updateCar(id: string, carData: Car) {
     ).json();
 }
 
+export async function deleteCar(id: string) {
+    console.log(id);
+    return (
+        await fetch(`${garage}/${id}`, {
+            method: 'DELETE',
+        })
+    ).json();
+}
+
 export default getCars;

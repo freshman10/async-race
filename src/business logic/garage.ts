@@ -1,4 +1,4 @@
-import getCars, { getCar } from '../API/api';
+import getCars, { deleteCar, getCar } from '../API/api';
 import { state } from '../constants/constants';
 import { Car } from '../constants/types';
 import { clearDOMStorage, elementDomStorage } from '../render/createHTMLelement';
@@ -53,7 +53,7 @@ function setElementActive(target: string, id?: string): void {
     });
 }
 
-export function addEventListenerSelectButton() {
+export function addEventListenerSelectButton(): void {
     elementDomStorage.get('button-select')?.forEach((button) => {
         button.addEventListener('click', async () => {
             const carID = (button as HTMLButtonElement).value;
@@ -62,6 +62,16 @@ export function addEventListenerSelectButton() {
             setElementActive('button-update');
             setElementActive('button-select');
             button.classList.add('inactive');
+        });
+    });
+}
+
+export function addEventListenerRemoveButton(): void {
+    elementDomStorage.get('button-remove')?.forEach((button) => {
+        button.addEventListener('click', async () => {
+            const id = (button as HTMLButtonElement).value;
+            await deleteCar(id);
+            await updateGarage();
         });
     });
 }
