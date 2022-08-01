@@ -14,3 +14,13 @@ export const CONTAINER = 'container';
 export const CRUD_CONTAINER_CLASS = 'container-crud';
 export const GARAGE_BUTTON_LABEL = 'TO GARAGE';
 export const WINNERS_BUTTON_LABEL = 'TO WINNERS';
+
+export const CAR_MODELS = {
+    Moscvich: ['400', '402', '408', '415', '2150', '2142'],
+    BMW: ['2', '3', '4', '5', '6', '7'],
+    Lexus: ['RX', 'ES', 'NX', 'GX', 'LX', 'LS'],
+    Ferrari: ['296 GTB', 'Roma', 'F8 Tributo', '812 Superfast', 'SF90 Stradale'],
+    LADA: ['Granta', 'Vesta', 'XRAY', 'Largus', '4x4', 'Niva'],
+    Nissan: ['Pathfinder', 'X-Trail', 'Qashqai', 'Terrano', 'Murano', 'Juke'],
+    Toyota: ['Corolla', 'Camry', 'C-HR', 'RAV4', 'Highlander', 'Fortuner'],
+};

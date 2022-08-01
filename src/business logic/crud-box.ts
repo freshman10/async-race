@@ -1,7 +1,7 @@
 import { createCar, updateCar } from '../API/api';
 import { elementDomStorage } from '../render/createHTMLelement';
 import { updateGarage } from './garage';
-import { getInputData } from './utils';
+import { generateRandomColor, generateRandomModel, getInputData } from './utils';
 
 export function isEmptyInputListener(target: string): void {
     elementDomStorage.get(target)?.forEach((input) => {
@@ -44,6 +44,26 @@ export function addUpdateButtonListener(): void {
                 });
                 updateGarage();
             }
+        });
+    });
+}
+
+export function addEventListenerGenerateCars(): void {
+    elementDomStorage.get('button-generate')?.forEach((button) => {
+        button.addEventListener('click', async () => {
+            const promises = [];
+            for (let i = 0; i < 100; i += 1) {
+                const color = generateRandomColor();
+                const name = generateRandomModel();
+                promises.push(
+                    createCar({
+                        name,
+                        color,
+                    })
+                );
+            }
+            await Promise.allSettled(promises);
+            updateGarage();
         });
     });
 }
