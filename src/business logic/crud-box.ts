@@ -1,7 +1,15 @@
-import { createCar, updateCar } from '../API/api';
+import getCars, { createCar, updateCar } from '../API/api';
+import { state } from '../constants/constants';
 import { elementDomStorage } from '../render/createHTMLelement';
-import { updateGarage } from './garage';
-import { generateRandomColor, generateRandomModel, getInputData } from './utils';
+import { changeElementState, updateGarage } from './garage';
+import {
+    checkDriveStatus,
+    generateRandomColor,
+    generateRandomModel,
+    getInputData,
+    startCarEngine,
+    stopCarEngine,
+} from './utils';
 
 export function isEmptyInputListener(target: string): void {
     elementDomStorage.get(target)?.forEach((input) => {
@@ -64,6 +72,42 @@ export function addEventListenerGenerateCars(): void {
             }
             await Promise.allSettled(promises);
             updateGarage();
+        });
+    });
+}
+
+export function addEventListenerResetButton(): void {
+    elementDomStorage.get('button-reset')?.forEach((button) => {
+        button.addEventListener('click', async () => {
+            const carsData = await getCars(state.page);
+            carsData.items.forEach((car) => {
+                if (car.id) {
+                    stopCarEngine(car.id.toString());
+                }
+            });
+            changeElementState('button-reset', false);
+            changeElementState('button-race', true);
+        });
+    });
+}
+
+export function addEventListenerRaceButton(): void {
+    elementDomStorage.get('button-race')?.forEach((button) => {
+        button.addEventListener('click', async () => {
+            if (!button.classList.contains('inactive')) {
+                button.classList.add('inactive');
+                const cars = await getCars(state.page);
+                changeElementState('button-reset', true);
+                cars.items.forEach((car) => {
+                    if (car.id) {
+                        const id = car.id.toString();
+                        startCarEngine(id);
+                        checkDriveStatus(id);
+                        changeElementState('button-start', false, id);
+                        changeElementState('button-stop', true, id);
+                    }
+                });
+            }
         });
     });
 }

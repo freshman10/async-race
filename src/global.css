@@ -61,8 +61,8 @@
 
 .car-image {
     position: absolute;
-    top: 11px;
-    left: 100px;
+    top: -13px;
+    left: 20px;
     width: 60px;
 }
 
@@ -75,7 +75,7 @@
 .finish-image {
     position: absolute;
     top: 15px;
-    right: 70px;
+    right: 85px;
     width: 40px;
 }
 
@@ -107,4 +107,20 @@
 .inactive,
 .inactive:hover {
     background-color: gray;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 30px 0;
+}
+
+.button-prev,
+.button-next {
+    width: 120px;   
+}
+
+.car-svg-container {
+    position: relative;
 }

@@ -1,10 +1,19 @@
 import {
     addEventListenerGenerateCars,
+    addEventListenerRaceButton,
+    addEventListenerResetButton,
     addNewCarButtonListener,
     addUpdateButtonListener,
     isEmptyInputListener,
 } from './crud-box';
-import { addEventListenerRemoveButton, addEventListenerSelectButton } from './garage';
+import {
+    addEventListenerNextButton,
+    addEventListenerPREVButton,
+    addEventListenerRemoveButton,
+    addEventListenerSelectButton,
+    addEventListenerStartEngine,
+    addEventListenerStopEngine,
+} from './garage';
 import listenTabs from './tabs';
 
 export function addControls(): void {
@@ -15,6 +24,12 @@ export function addControls(): void {
     addUpdateButtonListener();
     addEventListenerRemoveButton();
     addEventListenerGenerateCars();
+    addEventListenerNextButton();
+    addEventListenerPREVButton();
+    addEventListenerStartEngine();
+    addEventListenerStopEngine();
+    addEventListenerResetButton();
+    addEventListenerRaceButton();
 }
 
 export default addControls;

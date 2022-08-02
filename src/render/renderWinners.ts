@@ -1,5 +1,5 @@
 import { createElement } from './createHTMLelement';
-import { renderItemsLabel, renderPageNumber } from './renderGarage';
+import { renderItemsLabel, renderPageNumber, renderPaginationButtons } from './renderGarage';
 
 function createTableRow(parentElement: HTMLElement, data: string[], isHeader?: boolean): void {
     const row = createElement('tr', parentElement, ['row']);
@@ -24,6 +24,7 @@ function renderWinners(): void {
     renderItemsLabel(containerWinners, '0', 'winners');
     renderPageNumber(containerWinners, 0);
     renderTable(containerWinners);
+    renderPaginationButtons(containerWinners, 'winners');
 }
 
 export default renderWinners;

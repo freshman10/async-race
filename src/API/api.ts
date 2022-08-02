@@ -1,5 +1,5 @@
-import { garage } from '../constants/constants';
-import { Car, CarsResponse } from '../constants/types';
+import { engine, garage } from '../constants/constants';
+import { Car, CarsResponse, Speed } from '../constants/types';
 
 export async function getCars(page: number, limit = 7): Promise<CarsResponse> {
     const response = await fetch(`${garage}?_page=${page}&_limit=${limit}`);
@@ -14,7 +14,7 @@ export async function getCar(id: string): Promise<Car> {
     return response.json();
 }
 
-export async function createCar(data: Car) {
+export async function createCar(data: Car): Promise<Car> {
     return (
         await fetch(garage, {
             method: 'POST',
@@ -26,7 +26,7 @@ export async function createCar(data: Car) {
     ).json();
 }
 
-export async function updateCar(id: string, carData: Car) {
+export async function updateCar(id: string, carData: Car): Promise<Car> {
     return (
         await fetch(`${garage}/${id}`, {
             method: 'PUT',
@@ -38,13 +38,33 @@ export async function updateCar(id: string, carData: Car) {
     ).json();
 }
 
-export async function deleteCar(id: string) {
-    console.log(id);
+export async function deleteCar(id: string): Promise<void> {
+    await fetch(`${garage}/${id}`, {
+        method: 'DELETE',
+    });
+}
+
+export async function startEngine(id: string): Promise<Speed> {
     return (
-        await fetch(`${garage}/${id}`, {
-            method: 'DELETE',
+        await fetch(`${engine}?id=${id}&status=started`, {
+            method: 'PATCH',
         })
     ).json();
+}
+
+export async function stopEngine(id: string): Promise<Speed> {
+    return (
+        await fetch(`${engine}?id=${id}&status=stopped`, {
+            method: 'PATCH',
+        })
+    ).json();
+}
+
+export async function driveCar(id: string): Promise<{ success: boolean }> {
+    const data = await fetch(`${engine}?id=${id}&status=drive`, {
+        method: 'PATCH',
+    }).catch();
+    return data.status === 200 ? { ...(await data.json()) } : { success: false };
 }
 
 export default getCars;

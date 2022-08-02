@@ -1,6 +1,11 @@
 export const state = {
     activeLayer: 'garage',
     page: 1,
+    maxPagesGarage: 1,
+    maxPagesWinners: 1,
+    carStatus: new Map(),
+    carCurrentX: new Map(),
+    carDriveStatus: new Map(),
 };
 
 export const base = 'http://127.0.0.1:3000';
