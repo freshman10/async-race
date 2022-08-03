@@ -220,4 +220,8 @@ export function createElement(
     throw new Error(WRONG_DATA);
 }
 
+export function getSortOrder(fieldToSort: string, order: string): string {
+    return fieldToSort && order ? `&_sort=${fieldToSort}&_order=${order}` : '';
+}
+
 export default { switchLayers, getInputData };

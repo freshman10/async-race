@@ -136,3 +136,8 @@
     font-size: 32px;
     color: red;
 }
+
+.car-item {
+    position: static;
+    width: 45px;
+}

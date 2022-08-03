@@ -1,5 +1,6 @@
-import { engine, garage } from '../constants/constants';
-import { Car, CarsResponse, Speed } from '../constants/types';
+import { getSortOrder } from '../business logic/utils';
+import { engine, garage, winners } from '../constants/constants';
+import { Car, CarsResponse, Speed, Winner, WinnersResponse } from '../constants/types';
 
 export async function getCars(page: number, limit = 7): Promise<CarsResponse> {
     const response = await fetch(`${garage}?_page=${page}&_limit=${limit}`);
@@ -65,6 +66,49 @@ export async function driveCar(id: string): Promise<{ success: boolean }> {
         method: 'PATCH',
     }).catch();
     return data.status === 200 ? { ...(await data.json()) } : { success: false };
+}
+
+export async function getWinners(page: number, sort: string, order: string, limit = 10): Promise<WinnersResponse> {
+    const response = await fetch(`${winners}?_page=${page}&_limit=${limit}${getSortOrder(sort, order)}`);
+    const items = await response.json();
+    return {
+        items: await Promise.all(
+            items.map(async (winner: Winner) => ({ ...winner, car: await getCar(winner.id.toString()) }))
+        ),
+        count: response.headers.get('X-Total-Count') as string,
+    };
+}
+
+export async function getWinner(id: string): Promise<Winner> {
+    return (await fetch(`${winners}/${id}`)).json();
+}
+
+export async function createWinner(body: Winner): Promise<Winner> {
+    return (
+        await fetch(`${winners}`, {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+    ).json();
+}
+
+export async function deleteWinner(id: string): Promise<Winner> {
+    return (await fetch(`${winners}/${id}`, { method: 'DELETE' })).json();
+}
+
+export async function updateWinner(id: string, body: Winner): Promise<Winner> {
+    return (
+        await fetch(`${winners}/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify(body),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+    ).json();
 }
 
 export default getCars;

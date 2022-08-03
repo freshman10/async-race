@@ -13,3 +13,14 @@ export interface Speed {
     velocity: number;
     distance: number;
 }
+
+export interface Winner {
+    id: number;
+    wins: number;
+    time: number;
+    car: Car;
+}
+export interface WinnersResponse {
+    items: Winner[];
+    count: string;
+}

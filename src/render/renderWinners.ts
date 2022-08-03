@@ -1,29 +1,41 @@
+import { getWinners } from '../API/api';
 import { createElement } from '../business logic/utils';
-import { renderItemsLabel, renderPageNumber, renderPaginationButtons } from './renderGarage';
+import { state } from '../constants/constants';
+import { Winner } from '../constants/types';
+import { addCarSVGImage, renderItemsLabel, renderPageNumber, renderPaginationButtons } from './renderGarage';
 
 function createTableRow(parentElement: HTMLElement, data: string[], isHeader?: boolean): void {
     const row = createElement('tr', parentElement, ['row']);
     const tag = isHeader ? 'th' : 'td';
     if (data[1]) {
         data.forEach((el) => {
-            createElement(tag, row, ['table-item'], el);
+            const element = createElement(tag, row, ['table-item']);
+            element.innerHTML = el;
         });
     }
 }
 
-function renderTable(parentElement: HTMLElement): void {
+function renderTable(parentElement: HTMLElement, data: Winner[]): void {
     const table = createElement('table', parentElement, ['table']);
     createTableRow(table, ['Number', 'Car', 'Name', 'Wins', 'Best time (seconds)'], true);
-    for (let i = 0; i < 10; i += 1) {
-        createTableRow(table, [(i + 1).toString(), '12', '', '', '', '']);
+    for (let i = 0; i < data.length; i += 1) {
+        const { wins, time, car } = data[i];
+        createTableRow(table, [
+            (i + 1).toString(),
+            addCarSVGImage(document.body, car.color, true),
+            car.name,
+            wins.toString(),
+            time.toString(),
+        ]);
     }
 }
 
-function renderWinners(): void {
+async function renderWinners(): Promise<void> {
     const containerWinners = createElement('div', document.body, ['winners', 'go-top']);
-    renderItemsLabel(containerWinners, '0', 'winners');
-    renderPageNumber(containerWinners, 0);
-    renderTable(containerWinners);
+    const data = await getWinners(state.pageWinners, state.sort, state.order);
+    renderItemsLabel(containerWinners, data.count, 'winners');
+    renderPageNumber(containerWinners, state.pageWinners);
+    renderTable(containerWinners, data.items);
     renderPaginationButtons(containerWinners, 'winners');
 }
 
