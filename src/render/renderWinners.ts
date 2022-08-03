@@ -1,4 +1,4 @@
-import { createElement } from './createHTMLelement';
+import { createElement } from '../business logic/utils';
 import { renderItemsLabel, renderPageNumber, renderPaginationButtons } from './renderGarage';
 
 function createTableRow(parentElement: HTMLElement, data: string[], isHeader?: boolean): void {

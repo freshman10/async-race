@@ -1,10 +1,9 @@
 import getCars, { deleteCar, getCar } from '../API/api';
 import { state } from '../constants/constants';
 import { Car } from '../constants/types';
-import { clearDOMStorage, elementDomStorage } from '../render/createHTMLelement';
 import { renderGarage } from '../render/renderGarage';
 import addControls from './controls';
-import { checkDriveStatus, startCarEngine, stopCarEngine } from './utils';
+import { checkDriveStatus, clearDOMStorage, elementDomStorage, startCarEngine, stopCarEngine } from './utils';
 
 function clearGarage(): void {
     elementDomStorage.get('garage')?.forEach((garage) => {

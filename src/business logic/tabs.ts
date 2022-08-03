@@ -1,6 +1,5 @@
 import { state } from '../constants/constants';
-import { elementDomStorage } from '../render/createHTMLelement';
-import { switchLayers } from './utils';
+import { elementDomStorage, switchLayers } from './utils';
 
 function disableButton(target: string, callback: EventListenerOrEventListenerObject): void {
     elementDomStorage.get(target)?.forEach((button) => {

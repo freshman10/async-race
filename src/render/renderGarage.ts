@@ -1,7 +1,6 @@
-import { changeCarStatus, isActivePagination, updateMaxPage } from '../business logic/utils';
+import { changeCarStatus, createElement, isActivePagination, updateMaxPage } from '../business logic/utils';
 import { CONTAINER, CRUD_CONTAINER_CLASS, state } from '../constants/constants';
 import { Car, CarsResponse } from '../constants/types';
-import { createElement } from './createHTMLelement';
 
 require('../assets/icons/sports-car.svg');
 require('../assets/icons/finish.png');
@@ -133,7 +132,6 @@ export async function renderGarage(cars: Promise<CarsResponse>): Promise<void> {
     const containerGarage = createElement('div', document.body, ['garage', 'upper-layer'], '', [], 'garage');
     renderCRUDBox(containerGarage);
     await renderCarsTrack(containerGarage, cars);
-    console.log(cars);
     renderPaginationButtons(containerGarage, 'garage');
 }
 

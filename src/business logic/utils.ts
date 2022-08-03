@@ -1,7 +1,10 @@
-import { driveCar, startEngine, stopEngine } from '../API/api';
-import { CAR_MODELS, state } from '../constants/constants';
-import { elementDomStorage } from '../render/createHTMLelement';
+import { driveCar, getCar, startEngine, stopEngine } from '../API/api';
+import { CAR_MODELS, state, STRING, WRONG_DATA } from '../constants/constants';
+import { renderWinnerFrame } from '../render/renderWinnerFrame';
 import { changeElementState } from './garage';
+
+export const elementDomStorage = new Map<string, HTMLElement[]>();
+export const tagsStorage = new Map<string, string[]>();
 
 export function switchLayers(): void {
     ['garage', 'winners'].forEach((layer) => {
@@ -78,6 +81,22 @@ export async function checkDriveStatus(id: string): Promise<void> {
     }
 }
 
+function hideWinnerLabel(afterDelay: number): void {
+    setTimeout(() => {
+        elementDomStorage.get('winner-label-container')?.forEach((el) => {
+            const copy = el;
+            copy.style.display = 'none';
+        });
+        elementDomStorage.delete('winner-label-container');
+    }, afterDelay);
+}
+
+async function showWinner(id: string, duration: number): Promise<void> {
+    const car = await getCar(id);
+    renderWinnerFrame(car.name, duration);
+    hideWinnerLabel(5000);
+}
+
 export function animation(endX: number, duration: number, target: HTMLElement, id: string): void {
     let currentX = target.offsetLeft;
     const framesCount = (duration / 1000) * 60;
@@ -90,6 +109,10 @@ export function animation(endX: number, duration: number, target: HTMLElement, i
             requestAnimationFrame(tick);
         } else if (state.carStatus.get(id) === 'stopped') {
             copy.style.transform = `translateX(0px)`;
+        } else if (state.isRace && state.carStatus.get(id) === 'started') {
+            state.isRace = false;
+            console.log('winner', id);
+            showWinner(id, duration);
         }
     };
     tick();
@@ -116,6 +139,7 @@ export function changeCarStatus(id: string, status: string): void {
 
 export async function startCarEngine(id: string): Promise<void> {
     const speed = await startEngine(id);
+    console.log('started', id);
     const time = Math.floor(speed.distance / speed.velocity);
     let width = elementDomStorage.get('bottom-container')?.[0].offsetWidth;
     width = width ? width - 190 : 0;
@@ -132,9 +156,68 @@ export async function stopCarEngine(id: string): Promise<void> {
     changeElementState('button-stop', false, id);
     const car = getCarImageElementByID(id);
     await stopEngine(id);
+    console.log('stopped', id);
     if (car) {
         car.style.transform = `translateX(0px)`;
     }
+}
+
+export async function startDrivingCar(id: string): Promise<void> {
+    changeElementState('button-start', false, id);
+    changeElementState('button-stop', true, id);
+    await startCarEngine(id);
+    checkDriveStatus(id);
+}
+
+function saveToMap<T, K>(map: Map<T, K[]>, key: T, value: K): void {
+    if (map.has(key)) {
+        map.get(key)?.push(value);
+    } else {
+        map.set(key, [value]);
+    }
+}
+
+export function clearDOMStorage(tag: string): void {
+    new Set(tagsStorage.get(tag))?.forEach((cls) => {
+        elementDomStorage.delete(cls);
+    });
+}
+
+export function addToDOMStorage(element: HTMLElement, tag?: string): void {
+    if (element && element.classList) {
+        element.classList.forEach((cls) => {
+            saveToMap(elementDomStorage, cls, element);
+            if (tag) {
+                saveToMap(tagsStorage, tag, cls);
+            }
+        });
+    }
+}
+
+export function createElement(
+    type: string,
+    parentElement: HTMLElement,
+    classes?: string[],
+    text?: string,
+    attributes?: [string, string][],
+    tag?: string
+): HTMLElement {
+    if (type && parentElement && typeof type === STRING && parentElement instanceof HTMLElement) {
+        const element: HTMLElement = document.createElement(type);
+        if (classes) {
+            element.classList.add(...classes);
+        }
+        element.textContent = text || '';
+        if (attributes) {
+            for (let i = 0; i < attributes.length; i += 1) {
+                element.setAttribute(...attributes[i]);
+            }
+        }
+        parentElement.appendChild(element);
+        addToDOMStorage(element, tag);
+        return element;
+    }
+    throw new Error(WRONG_DATA);
 }
 
 export default { switchLayers, getInputData };

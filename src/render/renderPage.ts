@@ -1,6 +1,6 @@
+import { createElement } from '../business logic/utils';
 import { CONTAINER, GARAGE_BUTTON_LABEL, WINNERS_BUTTON_LABEL } from '../constants/constants';
 import { CarsResponse } from '../constants/types';
-import { createElement } from './createHTMLelement';
 import { renderGarage } from './renderGarage';
 import renderWinners from './renderWinners';
 

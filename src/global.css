@@ -124,3 +124,15 @@
 .car-svg-container {
     position: relative;
 }
+
+.winner-label-container {
+    position: fixed;
+    top: 50vh;
+    left: calc(50vw - 200px);
+    z-index: 10;
+}
+
+.winner-label {
+    font-size: 32px;
+    color: red;
+}

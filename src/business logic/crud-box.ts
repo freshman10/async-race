@@ -1,13 +1,12 @@
 import getCars, { createCar, updateCar } from '../API/api';
 import { state } from '../constants/constants';
-import { elementDomStorage } from '../render/createHTMLelement';
 import { changeElementState, updateGarage } from './garage';
 import {
-    checkDriveStatus,
+    elementDomStorage,
     generateRandomColor,
     generateRandomModel,
     getInputData,
-    startCarEngine,
+    startDrivingCar,
     stopCarEngine,
 } from './utils';
 
@@ -80,13 +79,17 @@ export function addEventListenerResetButton(): void {
     elementDomStorage.get('button-reset')?.forEach((button) => {
         button.addEventListener('click', async () => {
             const carsData = await getCars(state.page);
-            carsData.items.forEach((car) => {
+            let counter = 0;
+            carsData.items.forEach(async (car) => {
                 if (car.id) {
-                    stopCarEngine(car.id.toString());
+                    await stopCarEngine(car.id.toString());
                 }
+                if (counter === carsData.items.length - 1) {
+                    changeElementState('button-reset', false);
+                    changeElementState('button-race', true);
+                }
+                counter += 1;
             });
-            changeElementState('button-reset', false);
-            changeElementState('button-race', true);
         });
     });
 }
@@ -97,16 +100,19 @@ export function addEventListenerRaceButton(): void {
             if (!button.classList.contains('inactive')) {
                 button.classList.add('inactive');
                 const cars = await getCars(state.page);
+                state.isRace = true;
                 changeElementState('button-reset', true);
+                const promises: Promise<unknown>[] = [];
                 cars.items.forEach((car) => {
                     if (car.id) {
                         const id = car.id.toString();
-                        startCarEngine(id);
-                        checkDriveStatus(id);
-                        changeElementState('button-start', false, id);
-                        changeElementState('button-stop', true, id);
+                        const promise = new Promise((resolve) => {
+                            resolve(startDrivingCar(id));
+                        });
+                        promises.push(promise);
                     }
                 });
+                Promise.all(promises);
             }
         });
     });

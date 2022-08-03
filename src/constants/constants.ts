@@ -3,6 +3,7 @@ export const state = {
     page: 1,
     maxPagesGarage: 1,
     maxPagesWinners: 1,
+    isRace: false,
     carStatus: new Map(),
     carCurrentX: new Map(),
     carDriveStatus: new Map(),
