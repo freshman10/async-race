@@ -1,7 +1,7 @@
 import getCars, { deleteCar, getCar } from '../API/api';
-import { state } from '../constants/constants';
 import { Car } from '../constants/types';
 import { renderGarage } from '../render/renderGarage';
+import state from '../state/state';
 import { controlsGarage } from './controls';
 import { checkDriveStatus, clearDOMStorage, elementDomStorage, startCarEngine, stopCarEngine } from './utils';
 

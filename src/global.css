@@ -75,7 +75,7 @@
 .finish-image {
     position: absolute;
     top: 15px;
-    right: 85px;
+    right: 90px;
     width: 40px;
 }
 
@@ -101,7 +101,7 @@
 
 .table-item {
     text-align: center;
-    padding-left: 10px;
+    padding: 0 18px;
 }
 
 .inactive,
@@ -128,7 +128,7 @@
 .winner-label-container {
     position: fixed;
     top: 50vh;
-    left: calc(50vw - 200px);
+    left: calc(50vw - 120px);
     z-index: 10;
 }
 
@@ -140,4 +140,27 @@
 .car-item {
     position: static;
     width: 45px;
+}
+
+.sort {
+    background: url(assets/icons/bg.gif);
+    background-repeat: no-repeat ;
+    background-position: 100%;
+    user-select: none;
+}
+
+.sort:hover {
+    cursor: pointer;
+}
+
+.ascending {
+    background: url(assets/icons/asc.gif);
+    background-repeat: no-repeat ;
+    background-position: 100%;
+}
+
+.descending {
+    background: url(assets/icons/desc.gif);
+    background-repeat: no-repeat ;
+    background-position: 100%;
 }

@@ -1,5 +1,5 @@
 import getCars, { createCar, updateCar } from '../API/api';
-import { state } from '../constants/constants';
+import state from '../state/state';
 import { changeElementState, updateGarage } from './garage';
 import {
     elementDomStorage,

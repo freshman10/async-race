@@ -116,9 +116,9 @@ export async function saveWinner(id: string, time: number) {
     if (winner.id) {
         winner.wins += 1;
         winner.time = winner.time < time ? winner.time : time;
-        updateWinner(id, winner);
+        await updateWinner(id, winner);
     } else {
-        createWinner({ id: Number(id), wins: 1, time });
+        await createWinner({ id: Number(id), wins: 1, time });
     }
 }
 export default getCars;

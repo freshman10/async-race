@@ -1,6 +1,7 @@
-import { driveCar, getCar, saveWinner, startEngine, stopEngine } from '../API/api';
-import { CAR_MODELS, state, STRING, WRONG_DATA } from '../constants/constants';
+import { driveCar, getCar, getWinners, saveWinner, startEngine, stopEngine } from '../API/api';
+import { CAR_MODELS, STRING, WRONG_DATA } from '../constants/constants';
 import { Car } from '../constants/types';
+import { state } from '../state/state';
 import { renderWinnerFrame } from '../render/renderWinnerFrame';
 import { changeElementState } from './garage';
 import { updateWinnersTable } from './winners';
@@ -112,11 +113,11 @@ export function animation(endX: number, duration: number, target: HTMLElement, i
             copy.style.transform = `translateX(0px)`;
         } else if (state.isRace && state.carStatus.get(id) === 'started') {
             state.isRace = false;
-            console.log('winner', id);
             const car = await getCar(id);
             showWinner(car, duration);
             await saveWinner(id, duration / 1000);
-            updateWinnersTable();
+            const data = await getWinners(state.pageWinners, state.sort, state.order);
+            await updateWinnersTable(data);
         }
     };
     tick();

@@ -1,15 +1,29 @@
-import { getWinners } from '../API/api';
 import { createElement } from '../business logic/utils';
-import { state } from '../constants/constants';
-import { Winner } from '../constants/types';
+import { getSortID } from '../business logic/winners';
+import { sortingStates } from '../constants/constants';
+import { Winner, WinnersResponse } from '../constants/types';
+import { state } from '../state/state';
 import { addCarSVGImage, renderItemsLabel, renderPageNumber, renderPaginationButtons } from './renderGarage';
 
 function createTableRow(parentElement: HTMLElement, data: string[], isHeader?: boolean): void {
-    const row = createElement('tr', parentElement, ['row'], '', [], 'winners');
+    const row = createElement('tr', parentElement, ['row'], '', [], 'winners'); // apply destructuring
     const tag = isHeader ? 'th' : 'td';
     if (data[1]) {
         data.forEach((el) => {
-            const element = createElement(tag, row, ['table-item'], '', [], 'winners');
+            const element = createElement(
+                tag,
+                row,
+                [
+                    'table-item',
+                    `${isHeader && ['Wins', 'Best time (seconds)'].includes(el) ? 'sort' : 'item'}`, // check it
+                    `${
+                        getSortID(el) === state.sort ? sortingStates[state.order as keyof typeof sortingStates] : 'auto'
+                    }`,
+                ],
+                '',
+                [],
+                'winners'
+            );
             element.innerHTML = el;
         });
     }
@@ -32,7 +46,7 @@ function renderTable(parentElement: HTMLElement, data: Winner[]): void {
     }
 }
 
-async function renderWinners(): Promise<void> {
+async function renderWinners(data: WinnersResponse): Promise<void> {
     const containerWinners = createElement(
         'div',
         document.body,
@@ -41,11 +55,9 @@ async function renderWinners(): Promise<void> {
         [],
         'winners'
     );
-    const data = await getWinners(state.pageWinners, state.sort, state.order);
-    console.log(data);
     renderItemsLabel(containerWinners, data.count, 'winners');
     renderPageNumber(containerWinners, state.pageWinners, 'winners');
-    renderTable(containerWinners, data.items);
+    await renderTable(containerWinners, data.items);
     renderPaginationButtons(containerWinners, 'winners');
 }
 

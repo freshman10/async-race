@@ -1,4 +1,4 @@
-import { state } from '../constants/constants';
+import { state } from '../state/state';
 import { elementDomStorage, switchLayers } from './utils';
 
 function disableButton(target: string, callback: EventListenerOrEventListenerObject): void {

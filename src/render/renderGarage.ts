@@ -1,6 +1,7 @@
 import { changeCarStatus, createElement, isActivePagination, updateMaxPage } from '../business logic/utils';
-import { CONTAINER, CRUD_CONTAINER_CLASS, state } from '../constants/constants';
+import { CONTAINER, CRUD_CONTAINER_CLASS } from '../constants/constants';
 import { Car, CarsResponse } from '../constants/types';
+import { state } from '../state/state';
 
 require('../assets/icons/sports-car.svg');
 require('../assets/icons/finish.png');

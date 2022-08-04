@@ -15,6 +15,7 @@ import {
     addEventListenerStopEngine,
 } from './garage';
 import listenTabs from './tabs';
+import { addEventListenerSort } from './winners';
 
 export function controlsGarage(): void {
     listenTabs();
@@ -33,7 +34,7 @@ export function controlsGarage(): void {
 }
 
 export function controlsWinners(): void {
-    console.log('do later');
+    addEventListenerSort();
 }
 
 export function addControls(): void {
