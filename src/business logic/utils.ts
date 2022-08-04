@@ -1,7 +1,9 @@
-import { driveCar, getCar, startEngine, stopEngine } from '../API/api';
+import { driveCar, getCar, saveWinner, startEngine, stopEngine } from '../API/api';
 import { CAR_MODELS, state, STRING, WRONG_DATA } from '../constants/constants';
+import { Car } from '../constants/types';
 import { renderWinnerFrame } from '../render/renderWinnerFrame';
 import { changeElementState } from './garage';
+import { updateWinnersTable } from './winners';
 
 export const elementDomStorage = new Map<string, HTMLElement[]>();
 export const tagsStorage = new Map<string, string[]>();
@@ -91,8 +93,7 @@ function hideWinnerLabel(afterDelay: number): void {
     }, afterDelay);
 }
 
-async function showWinner(id: string, duration: number): Promise<void> {
-    const car = await getCar(id);
+async function showWinner(car: Car, duration: number): Promise<void> {
     renderWinnerFrame(car.name, duration);
     hideWinnerLabel(5000);
 }
@@ -102,7 +103,7 @@ export function animation(endX: number, duration: number, target: HTMLElement, i
     const framesCount = (duration / 1000) * 60;
     const dx = (endX - currentX) / framesCount;
     const copy = target;
-    const tick = () => {
+    const tick = async () => {
         currentX += dx;
         copy.style.transform = `translateX(${currentX}px)`;
         if (currentX < endX && state.carStatus.get(id) === 'started') {
@@ -112,7 +113,10 @@ export function animation(endX: number, duration: number, target: HTMLElement, i
         } else if (state.isRace && state.carStatus.get(id) === 'started') {
             state.isRace = false;
             console.log('winner', id);
-            showWinner(id, duration);
+            const car = await getCar(id);
+            showWinner(car, duration);
+            await saveWinner(id, duration / 1000);
+            updateWinnersTable();
         }
     };
     tick();

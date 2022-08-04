@@ -18,7 +18,7 @@ export interface Winner {
     id: number;
     wins: number;
     time: number;
-    car: Car;
+    car?: Car;
 }
 export interface WinnersResponse {
     items: Winner[];

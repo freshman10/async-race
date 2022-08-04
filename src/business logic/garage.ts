@@ -2,21 +2,21 @@ import getCars, { deleteCar, getCar } from '../API/api';
 import { state } from '../constants/constants';
 import { Car } from '../constants/types';
 import { renderGarage } from '../render/renderGarage';
-import addControls from './controls';
+import { controlsGarage } from './controls';
 import { checkDriveStatus, clearDOMStorage, elementDomStorage, startCarEngine, stopCarEngine } from './utils';
 
-function clearGarage(): void {
-    elementDomStorage.get('garage')?.forEach((garage) => {
+export function eraseElement(target: string): void {
+    elementDomStorage.get(target)?.forEach((garage) => {
         garage.remove();
     });
 }
 
 export async function updateGarage(): Promise<void> {
     const data = getCars(state.page);
-    clearGarage();
+    eraseElement('garage');
     clearDOMStorage('garage');
     await renderGarage(data);
-    addControls();
+    controlsGarage();
 }
 
 function setValueToInputElement(target: string, value: string): void {

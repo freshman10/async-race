@@ -111,4 +111,14 @@ export async function updateWinner(id: string, body: Winner): Promise<Winner> {
     ).json();
 }
 
+export async function saveWinner(id: string, time: number) {
+    const winner = await getWinner(id);
+    if (winner.id) {
+        winner.wins += 1;
+        winner.time = winner.time < time ? winner.time : time;
+        updateWinner(id, winner);
+    } else {
+        createWinner({ id: Number(id), wins: 1, time });
+    }
+}
 export default getCars;

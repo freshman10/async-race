@@ -16,7 +16,7 @@ import {
 } from './garage';
 import listenTabs from './tabs';
 
-export function addControls(): void {
+export function controlsGarage(): void {
     listenTabs();
     addNewCarButtonListener();
     isEmptyInputListener('text-create');
@@ -30,6 +30,15 @@ export function addControls(): void {
     addEventListenerStopEngine();
     addEventListenerResetButton();
     addEventListenerRaceButton();
+}
+
+export function controlsWinners(): void {
+    console.log('do later');
+}
+
+export function addControls(): void {
+    controlsGarage();
+    controlsWinners();
 }
 
 export default addControls;

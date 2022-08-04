@@ -65,9 +65,16 @@ export function renderItemsLabel(parentElement: HTMLElement, items: string | nul
     updateMaxPage(Number(items), label.toLowerCase());
 }
 
-export function renderPageNumber(parentElement: HTMLElement, pageNumber: number): void {
-    const containerGarageItems = createElement('div', parentElement, [CONTAINER], '', [], 'garage');
-    createElement('p', containerGarageItems, ['page-number', 'label'], `Page #${pageNumber}`, [], 'garage');
+export function renderPageNumber(parentElement: HTMLElement, pageNumber: number, label?: string): void {
+    const containerGarageItems = createElement('div', parentElement, [CONTAINER], '', [], `${label || 'garage'}`);
+    createElement(
+        'p',
+        containerGarageItems,
+        ['page-number', 'label'],
+        `Page #${pageNumber}`,
+        [],
+        `${label || 'garage'}`
+    );
 }
 
 function renderCar(parentElement: HTMLElement, car: Car): void {
@@ -134,7 +141,14 @@ export function renderPaginationButtons(parentElement: HTMLElement, tag: string)
 }
 
 export async function renderGarage(cars: Promise<CarsResponse>): Promise<void> {
-    const containerGarage = createElement('div', document.body, ['garage', 'upper-layer'], '', [], 'garage');
+    const containerGarage = createElement(
+        'div',
+        document.body,
+        ['garage', `${state.activeLayer === 'garage' ? 'upper-layer' : ''}`],
+        '',
+        [],
+        'garage'
+    );
     renderCRUDBox(containerGarage);
     await renderCarsTrack(containerGarage, cars);
     renderPaginationButtons(containerGarage, 'garage');
