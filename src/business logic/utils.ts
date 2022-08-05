@@ -53,11 +53,13 @@ export function generateRandomModel(): string {
 }
 
 export function updateMaxPage(items: number, tag: string): void {
-    const add = items % 7 > 0 ? 1 : 0;
-    const pages = Math.floor(items / 7) + add;
     if (tag === 'garage') {
+        const add = items % 7 > 0 ? 1 : 0;
+        const pages = Math.floor(items / 7) + add;
         state.maxPagesGarage = pages;
     } else if (tag === 'winners') {
+        const add = items % 10 > 0 ? 1 : 0;
+        const pages = Math.floor(items / 7) + add;
         state.maxPagesWinners = pages;
     }
 }
@@ -73,6 +75,17 @@ export function isActivePagination(tag: string): void {
             changeElementState('button-garage-next', false);
         } else {
             changeElementState('button-garage-next', true);
+        }
+    } else if (tag === 'winners') {
+        if (state.pageWinners === 1) {
+            changeElementState('button-winners-prev', false);
+        } else {
+            changeElementState('button-winners-prev', true);
+        }
+        if (state.pageWinners >= state.maxPagesWinners) {
+            changeElementState('button-winners-next', false);
+        } else {
+            changeElementState('button-winners-next', true);
         }
     }
 }
@@ -100,7 +113,8 @@ async function showWinner(car: Car, duration: number): Promise<void> {
 }
 
 export function animation(endX: number, duration: number, target: HTMLElement, id: string): void {
-    let currentX = target.offsetLeft;
+    let currentX = target.offsetLeft - 89;
+    console.log(currentX);
     const framesCount = (duration / 1000) * 60;
     const dx = (endX - currentX) / framesCount;
     const copy = target;
@@ -144,10 +158,9 @@ export function changeCarStatus(id: string, status: string): void {
 
 export async function startCarEngine(id: string): Promise<void> {
     const speed = await startEngine(id);
-    console.log('started', id);
     const time = Math.floor(speed.distance / speed.velocity);
     let width = elementDomStorage.get('bottom-container')?.[0].offsetWidth;
-    width = width ? width - 190 : 0;
+    width = width ? width - 200 : 0;
     const carImageElement = getCarImageElementByID(id);
     if (width && carImageElement) {
         changeCarStatus(id, 'started');
@@ -161,7 +174,6 @@ export async function stopCarEngine(id: string): Promise<void> {
     changeElementState('button-stop', false, id);
     const car = getCarImageElementByID(id);
     await stopEngine(id);
-    console.log('stopped', id);
     if (car) {
         car.style.transform = `translateX(0px)`;
     }
@@ -227,6 +239,16 @@ export function createElement(
 
 export function getSortOrder(fieldToSort: string, order: string): string {
     return fieldToSort && order ? `&_sort=${fieldToSort}&_order=${order}` : '';
+}
+
+export function isEveryCarReady(): boolean {
+    let flag = true;
+    elementDomStorage.get('button-start')?.forEach((button) => {
+        if (button.classList.contains('inactive')) {
+            flag = false;
+        }
+    });
+    return flag;
 }
 
 export default { switchLayers, getInputData };

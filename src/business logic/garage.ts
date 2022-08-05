@@ -1,9 +1,17 @@
-import getCars, { deleteCar, getCar } from '../API/api';
+import getCars, { deleteCar, deleteWinner, getCar, getWinners } from '../API/api';
 import { Car } from '../constants/types';
 import { renderGarage } from '../render/renderGarage';
 import state from '../state/state';
 import { controlsGarage } from './controls';
-import { checkDriveStatus, clearDOMStorage, elementDomStorage, startCarEngine, stopCarEngine } from './utils';
+import {
+    checkDriveStatus,
+    clearDOMStorage,
+    elementDomStorage,
+    isEveryCarReady,
+    startCarEngine,
+    stopCarEngine,
+} from './utils';
+import updateWinnersTable from './winners';
 
 export function eraseElement(target: string): void {
     elementDomStorage.get(target)?.forEach((garage) => {
@@ -79,6 +87,9 @@ export function addEventListenerRemoveButton(): void {
             const id = (button as HTMLButtonElement).value;
             await deleteCar(id);
             await updateGarage();
+            await deleteWinner(id);
+            const data = await getWinners(state.pageWinners, state.sort, state.order);
+            updateWinnersTable(data);
         });
     });
 }
@@ -113,6 +124,7 @@ export function addEventListenerStartEngine(): void {
                 changeElementState('button-start', false, id);
                 changeElementState('button-stop', true, id);
                 changeElementState('button-reset', true);
+                changeElementState('button-race', false);
                 await startCarEngine(id);
                 checkDriveStatus(id);
             }
@@ -126,6 +138,10 @@ export function addEventListenerStopEngine(): void {
             if (!button.classList.contains('inactive')) {
                 const id = (button as HTMLButtonElement).value;
                 stopCarEngine(id);
+                if (isEveryCarReady()) {
+                    changeElementState('button-reset', false);
+                    changeElementState('button-race', true);
+                }
             }
         });
     });

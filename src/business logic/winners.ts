@@ -34,6 +34,9 @@ function arrangeSemaphore(target: HTMLElement): void {
 }
 
 export function getSortID(textContent: string): string {
+    if (!textContent) {
+        return 'id';
+    }
     if (textContent === 'Wins') {
         return 'wins';
     }
@@ -61,6 +64,30 @@ export function addEventListenerSort(): void {
             state.sort = getSortID(textContent);
             const data = await getWinners(state.pageWinners, state.sort, state.order);
             updateWinnersTable(data);
+        });
+    });
+}
+
+export function addEventListenerPREVButtonWinners(): void {
+    elementDomStorage.get('button-winners-prev')?.forEach((button) => {
+        button.addEventListener('click', async () => {
+            if (!button.classList.contains('inactive')) {
+                state.pageWinners -= 1;
+                const data = await getWinners(state.pageWinners, state.sort, state.order);
+                updateWinnersTable(data);
+            }
+        });
+    });
+}
+
+export function addEventListenerNextButtonWinners(): void {
+    elementDomStorage.get('button-winners-next')?.forEach((button) => {
+        button.addEventListener('click', async () => {
+            if (!button.classList.contains('inactive')) {
+                state.pageWinners += 1;
+                const data = await getWinners(state.pageWinners, state.sort, state.order);
+                updateWinnersTable(data);
+            }
         });
     });
 }
