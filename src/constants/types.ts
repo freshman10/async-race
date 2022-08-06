@@ -24,3 +24,29 @@ export interface WinnersResponse {
     items: Winner[];
     count: string;
 }
+
+export interface CreateElementInterface {
+    type: string;
+    parentElement: HTMLElement;
+    classes?: string[];
+    text?: string;
+    attributes?: [string, string][];
+    tag?: string;
+}
+
+export enum sortingTypesEnum {
+    'DESC',
+    'ASC',
+}
+
+export enum CarStatusEnum {
+    'started',
+    'stopped',
+    'drive',
+}
+
+export enum SortingColumn {
+    'id',
+    'wins',
+    'time',
+}

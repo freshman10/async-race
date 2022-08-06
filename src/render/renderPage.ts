@@ -5,13 +5,27 @@ import { renderGarage } from './renderGarage';
 import renderWinners from './renderWinners';
 
 function renderTabs(): void {
-    const containerTabs = createElement('div', document.body, [CONTAINER, 'upper-layer']);
-    createElement('button', containerTabs, ['button', 'garage-button', 'inactive'], GARAGE_BUTTON_LABEL);
-    createElement('button', containerTabs, ['button', 'winners-button'], WINNERS_BUTTON_LABEL);
+    const containerTabs = createElement({
+        type: 'div',
+        parentElement: document.body,
+        classes: [CONTAINER, 'upper-layer'],
+    });
+    createElement({
+        type: 'button',
+        parentElement: containerTabs,
+        classes: ['button', 'garage-button', 'inactive'],
+        text: GARAGE_BUTTON_LABEL,
+    });
+    createElement({
+        type: 'button',
+        parentElement: containerTabs,
+        classes: ['button', 'winners-button'],
+        text: WINNERS_BUTTON_LABEL,
+    });
 }
 
 function renderSplitLayer(): void {
-    createElement('div', document.body, ['split-layer']);
+    createElement({ type: 'div', parentElement: document.body, classes: ['split-layer'] });
 }
 
 export async function renderPage(cars: Promise<CarsResponse>, winners: WinnersResponse): Promise<void> {

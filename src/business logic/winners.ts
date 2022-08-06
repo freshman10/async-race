@@ -1,14 +1,15 @@
 import { getWinners } from '../API/api';
 import { state } from '../state/state';
-import { WinnersResponse } from '../constants/types';
+import { SortingColumn, sortingTypesEnum, WinnersResponse } from '../constants/types';
 import renderWinners from '../render/renderWinners';
 import { controlsWinners } from './controls';
 import { eraseElement } from './garage';
 import { clearDOMStorage, elementDomStorage } from './utils';
+import { LAYERS, ONE } from '../constants/constants';
 
 export async function updateWinnersTable(winners: WinnersResponse): Promise<void> {
-    eraseElement('winners');
-    clearDOMStorage('winners');
+    eraseElement(LAYERS[1]);
+    clearDOMStorage(LAYERS[1]);
     await renderWinners(winners);
     controlsWinners();
 }
@@ -35,22 +36,22 @@ function arrangeSemaphore(target: HTMLElement): void {
 
 export function getSortID(textContent: string): string {
     if (!textContent) {
-        return 'id';
+        return SortingColumn[0];
     }
     if (textContent === 'Wins') {
-        return 'wins';
+        return SortingColumn[1];
     }
-    if (textContent.split(' ')[1] === 'time') {
-        return 'time';
+    if (textContent.split(' ')[ONE] === 'time') {
+        return SortingColumn[2];
     }
-    return 'id';
+    return SortingColumn[0];
 }
 
-function getOrder(target: HTMLElement): string {
+function getOrder(target: HTMLElement): sortingTypesEnum {
     if (target.classList.contains('descending')) {
-        return 'DESC';
+        return sortingTypesEnum.DESC;
     }
-    return 'ASC';
+    return sortingTypesEnum.ASC;
 }
 
 export function addEventListenerSort(): void {
@@ -72,7 +73,7 @@ export function addEventListenerPREVButtonWinners(): void {
     elementDomStorage.get('button-winners-prev')?.forEach((button) => {
         button.addEventListener('click', async () => {
             if (!button.classList.contains('inactive')) {
-                state.pageWinners -= 1;
+                state.pageWinners -= ONE;
                 const data = await getWinners(state.pageWinners, state.sort, state.order);
                 updateWinnersTable(data);
             }
@@ -84,7 +85,7 @@ export function addEventListenerNextButtonWinners(): void {
     elementDomStorage.get('button-winners-next')?.forEach((button) => {
         button.addEventListener('click', async () => {
             if (!button.classList.contains('inactive')) {
-                state.pageWinners += 1;
+                state.pageWinners += ONE;
                 const data = await getWinners(state.pageWinners, state.sort, state.order);
                 updateWinnersTable(data);
             }

@@ -5,7 +5,7 @@ import renderPage from './render/renderPage';
 import { state } from './state/state';
 
 async function startApplication(): Promise<void> {
-    const cars = getCars(state.page);
+    const cars = getCars(state.pageGarage);
     const winners = await getWinners(state.pageWinners, state.sort, state.order);
     await renderPage(cars, winners);
     addControls();

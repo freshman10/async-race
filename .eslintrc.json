@@ -18,6 +18,8 @@
         "node": true
     },
     "rules": {
+        "no-shadow": "off",
+        "@typescript-eslint/no-shadow": ["error"],
         "no-debugger": "off",
         "no-console": 0,
         "class-methods-use-this": "off",
@@ -40,5 +42,5 @@
             "extensions": [".js", ".jsx", ".ts", ".tsx"]
           }
         }
-      }
+    }
 }

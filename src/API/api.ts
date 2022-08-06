@@ -1,8 +1,8 @@
 import { getSortOrder } from '../business logic/utils';
-import { engine, garage, winners } from '../constants/constants';
-import { Car, CarsResponse, Speed, Winner, WinnersResponse } from '../constants/types';
+import { engine, garage, MAX_CARS, MAX_WINNERS, winners } from '../constants/constants';
+import { Car, CarsResponse, sortingTypesEnum, Speed, Winner, WinnersResponse } from '../constants/types';
 
-export async function getCars(page: number, limit = 7): Promise<CarsResponse> {
+export async function getCars(page: number, limit = MAX_CARS): Promise<CarsResponse> {
     const response = await fetch(`${garage}?_page=${page}&_limit=${limit}`);
     return {
         items: await response.json(),
@@ -68,8 +68,15 @@ export async function driveCar(id: string): Promise<{ success: boolean }> {
     return data.status === 200 ? { ...(await data.json()) } : { success: false };
 }
 
-export async function getWinners(page: number, sort: string, order: string, limit = 10): Promise<WinnersResponse> {
-    const response = await fetch(`${winners}?_page=${page}&_limit=${limit}${getSortOrder(sort, order)}`);
+export async function getWinners(
+    page: number,
+    sort: string,
+    order: sortingTypesEnum,
+    limit = MAX_WINNERS
+): Promise<WinnersResponse> {
+    const response = await fetch(
+        `${winners}?_page=${page}&_limit=${limit}${getSortOrder(sort, sortingTypesEnum[order])}`
+    );
     const items = await response.json();
     return {
         items: await Promise.all(

@@ -1,6 +1,21 @@
 import { driveCar, getCar, getWinners, saveWinner, startEngine, stopEngine } from '../API/api';
-import { CAR_MODELS, STRING, WRONG_DATA } from '../constants/constants';
-import { Car } from '../constants/types';
+import {
+    CAR_MODELS,
+    COLOR_HEX_LENGTH,
+    DELAY_TIME,
+    FINISH_OFFSET,
+    LAYERS,
+    LETTERS_HEX,
+    MAX_CARS,
+    MAX_WINNERS,
+    MILLISECONDS_IN_ONE_SECOND,
+    ONE,
+    SCREEN_UPDATE_FREQUENCY,
+    START,
+    STRING,
+    WRONG_DATA,
+} from '../constants/constants';
+import { Car, CarStatusEnum, CreateElementInterface } from '../constants/types';
 import { state } from '../state/state';
 import { renderWinnerFrame } from '../render/renderWinnerFrame';
 import { changeElementState } from './garage';
@@ -10,7 +25,7 @@ export const elementDomStorage = new Map<string, HTMLElement[]>();
 export const tagsStorage = new Map<string, string[]>();
 
 export function switchLayers(): void {
-    ['garage', 'winners'].forEach((layer) => {
+    LAYERS.forEach((layer) => {
         elementDomStorage.get(layer)?.forEach((el) => {
             el.classList.toggle('upper-layer');
         });
@@ -36,64 +51,56 @@ function getRandomNumber(from: number, to: number): number {
 }
 
 export function generateRandomColor(): string {
-    const lettersHEX = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
-    const to = lettersHEX.length;
+    const to = LETTERS_HEX.length;
     let color = '#';
-    for (let i = 0; i < 6; i += 1) {
-        color += lettersHEX[getRandomNumber(0, to)];
+    for (let i = 0; i < COLOR_HEX_LENGTH; i += 1) {
+        color += LETTERS_HEX[getRandomNumber(START, to)];
     }
     return color;
 }
 
 export function generateRandomModel(): string {
     const models = Object.keys(CAR_MODELS);
-    const id = getRandomNumber(0, models.length);
-    const type = getRandomNumber(0, CAR_MODELS[models[id] as keyof typeof CAR_MODELS].length);
+    const id = getRandomNumber(START, models.length);
+    const type = getRandomNumber(START, CAR_MODELS[models[id] as keyof typeof CAR_MODELS].length);
     return `${models[id]} ${CAR_MODELS[models[id] as keyof typeof CAR_MODELS][type]}`;
 }
 
 export function updateMaxPage(items: number, tag: string): void {
-    if (tag === 'garage') {
-        const add = items % 7 > 0 ? 1 : 0;
-        const pages = Math.floor(items / 7) + add;
+    if (tag === LAYERS[0]) {
+        const add = items % MAX_CARS > START ? ONE : START;
+        const pages = Math.floor(items / MAX_CARS) + add;
         state.maxPagesGarage = pages;
-    } else if (tag === 'winners') {
-        const add = items % 10 > 0 ? 1 : 0;
-        const pages = Math.floor(items / 7) + add;
+    } else if (tag === LAYERS[1]) {
+        const add = items % MAX_WINNERS > START ? ONE : START;
+        const pages = Math.floor(items / MAX_WINNERS) + add;
         state.maxPagesWinners = pages;
     }
 }
 
+export function capitalizeWord(str: string): string {
+    return str[0].toUpperCase() + str.slice(1);
+}
+
 export function isActivePagination(tag: string): void {
-    if (tag === 'garage') {
-        if (state.page === 1) {
-            changeElementState('button-garage-prev', false);
-        } else {
-            changeElementState('button-garage-prev', true);
-        }
-        if (state.page >= state.maxPagesGarage) {
-            changeElementState('button-garage-next', false);
-        } else {
-            changeElementState('button-garage-next', true);
-        }
-    } else if (tag === 'winners') {
-        if (state.pageWinners === 1) {
-            changeElementState('button-winners-prev', false);
-        } else {
-            changeElementState('button-winners-prev', true);
-        }
-        if (state.pageWinners >= state.maxPagesWinners) {
-            changeElementState('button-winners-next', false);
-        } else {
-            changeElementState('button-winners-next', true);
-        }
+    const currentPage = `page${capitalizeWord(tag)}` as keyof typeof state;
+    const maxPages = `maxPages${capitalizeWord(tag)}` as keyof typeof state;
+    if (state[currentPage] === ONE) {
+        changeElementState(`button-${tag}-prev`, false);
+    } else {
+        changeElementState(`button-${tag}-prev`, true);
+    }
+    if (state[currentPage] >= state[maxPages]) {
+        changeElementState(`button-${tag}-next`, false);
+    } else {
+        changeElementState(`button-${tag}-next`, true);
     }
 }
 
 export async function checkDriveStatus(id: string): Promise<void> {
     const data = await driveCar(id);
     if (!data.success) {
-        state.carStatus.set(id, 'drive');
+        state.carStatus.set(id, CarStatusEnum[2]);
     }
 }
 
@@ -109,27 +116,26 @@ function hideWinnerLabel(afterDelay: number): void {
 
 async function showWinner(car: Car, duration: number): Promise<void> {
     renderWinnerFrame(car.name, duration);
-    hideWinnerLabel(5000);
+    hideWinnerLabel(DELAY_TIME);
 }
 
 export function animation(endX: number, duration: number, target: HTMLElement, id: string): void {
-    let currentX = target.offsetLeft - 89;
-    console.log(currentX);
-    const framesCount = (duration / 1000) * 60;
+    let currentX = START;
+    const framesCount = (duration / MILLISECONDS_IN_ONE_SECOND) * SCREEN_UPDATE_FREQUENCY;
     const dx = (endX - currentX) / framesCount;
     const copy = target;
     const tick = async () => {
         currentX += dx;
         copy.style.transform = `translateX(${currentX}px)`;
-        if (currentX < endX && state.carStatus.get(id) === 'started') {
+        if (currentX < endX && state.carStatus.get(id) === CarStatusEnum[0]) {
             requestAnimationFrame(tick);
-        } else if (state.carStatus.get(id) === 'stopped') {
+        } else if (state.carStatus.get(id) === CarStatusEnum[1]) {
             copy.style.transform = `translateX(0px)`;
-        } else if (state.isRace && state.carStatus.get(id) === 'started') {
+        } else if (state.isRace && state.carStatus.get(id) === CarStatusEnum[0]) {
             state.isRace = false;
             const car = await getCar(id);
             showWinner(car, duration);
-            await saveWinner(id, duration / 1000);
+            await saveWinner(id, duration / MILLISECONDS_IN_ONE_SECOND);
             const data = await getWinners(state.pageWinners, state.sort, state.order);
             await updateWinnersTable(data);
         }
@@ -145,7 +151,7 @@ export function getCarImageElementByID(id: string): HTMLElement | undefined {
             }
             return acc;
         },
-        { item: elementDomStorage.get('car-svg-container')?.[0] }
+        { item: elementDomStorage.get('car-svg-container')?.[START] }
     ).item;
 }
 
@@ -159,17 +165,17 @@ export function changeCarStatus(id: string, status: string): void {
 export async function startCarEngine(id: string): Promise<void> {
     const speed = await startEngine(id);
     const time = Math.floor(speed.distance / speed.velocity);
-    let width = elementDomStorage.get('bottom-container')?.[0].offsetWidth;
-    width = width ? width - 200 : 0;
+    let width = elementDomStorage.get('bottom-container')?.[START].offsetWidth;
+    width = width ? width - FINISH_OFFSET : START;
     const carImageElement = getCarImageElementByID(id);
     if (width && carImageElement) {
-        changeCarStatus(id, 'started');
+        changeCarStatus(id, CarStatusEnum[0]);
         animation(width, time, carImageElement, id);
     }
 }
 
 export async function stopCarEngine(id: string): Promise<void> {
-    changeCarStatus(id, 'stopped');
+    changeCarStatus(id, CarStatusEnum[1]);
     changeElementState('button-start', true, id);
     changeElementState('button-stop', false, id);
     const car = getCarImageElementByID(id);
@@ -211,14 +217,8 @@ export function addToDOMStorage(element: HTMLElement, tag?: string): void {
     }
 }
 
-export function createElement(
-    type: string,
-    parentElement: HTMLElement,
-    classes?: string[],
-    text?: string,
-    attributes?: [string, string][],
-    tag?: string
-): HTMLElement {
+export function createElement(options: CreateElementInterface): HTMLElement {
+    const { type, parentElement, classes, text, attributes, tag } = options;
     if (type && parentElement && typeof type === STRING && parentElement instanceof HTMLElement) {
         const element: HTMLElement = document.createElement(type);
         if (classes) {

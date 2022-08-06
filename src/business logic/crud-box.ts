@@ -1,4 +1,5 @@
-import getCars, { createCar, updateCar } from '../API/api';
+import getCars, { createCar, getWinners, updateCar } from '../API/api';
+import { LAST_INDEX, NUMBER_OF_CARS_TO_GENERATE, ONE, START } from '../constants/constants';
 import state from '../state/state';
 import { changeElementState, updateGarage } from './garage';
 import {
@@ -9,11 +10,12 @@ import {
     startDrivingCar,
     stopCarEngine,
 } from './utils';
+import updateWinnersTable from './winners';
 
 export function isEmptyInputListener(target: string): void {
     elementDomStorage.get(target)?.forEach((input) => {
         input.addEventListener('keyup', () => {
-            const createButton = elementDomStorage.get('button-create')?.slice(-1)[0];
+            const createButton = elementDomStorage.get('button-create')?.slice(LAST_INDEX)[START];
             if (createButton) {
                 if ((input as HTMLInputElement).value) {
                     createButton.classList.remove('inactive');
@@ -49,7 +51,9 @@ export function addUpdateButtonListener(): void {
                     name,
                     color,
                 });
-                updateGarage();
+                await updateGarage();
+                const data = await getWinners(state.pageWinners, state.sort, state.order);
+                updateWinnersTable(data);
             }
         });
     });
@@ -59,7 +63,7 @@ export function addEventListenerGenerateCars(): void {
     elementDomStorage.get('button-generate')?.forEach((button) => {
         button.addEventListener('click', async () => {
             const promises = [];
-            for (let i = 0; i < 100; i += 1) {
+            for (let i = 0; i < NUMBER_OF_CARS_TO_GENERATE; i += 1) {
                 const color = generateRandomColor();
                 const name = generateRandomModel();
                 promises.push(
@@ -78,17 +82,17 @@ export function addEventListenerGenerateCars(): void {
 export function addEventListenerResetButton(): void {
     elementDomStorage.get('button-reset')?.forEach((button) => {
         button.addEventListener('click', async () => {
-            const carsData = await getCars(state.page);
-            let counter = 0;
+            const carsData = await getCars(state.pageGarage);
+            let counter = START;
             carsData.items.forEach(async (car) => {
                 if (car.id) {
                     await stopCarEngine(car.id.toString());
                 }
-                if (counter === carsData.items.length - 1) {
+                if (counter === carsData.items.length - ONE) {
                     changeElementState('button-reset', false);
                     changeElementState('button-race', true);
                 }
-                counter += 1;
+                counter += ONE;
             });
         });
     });
@@ -99,7 +103,7 @@ export function addEventListenerRaceButton(): void {
         button.addEventListener('click', async () => {
             if (!button.classList.contains('inactive')) {
                 button.classList.add('inactive');
-                const cars = await getCars(state.page);
+                const cars = await getCars(state.pageGarage);
                 state.isRace = true;
                 changeElementState('button-reset', true);
                 const promises: Promise<unknown>[] = [];

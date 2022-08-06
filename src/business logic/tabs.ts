@@ -1,3 +1,4 @@
+import { LAYERS } from '../constants/constants';
 import { state } from '../state/state';
 import { elementDomStorage, switchLayers } from './utils';
 
@@ -16,14 +17,15 @@ function activateButton(target: string, callback: EventListenerOrEventListenerOb
 }
 
 function tabsHandler(): void {
-    if (state.activeLayer === 'garage') {
+    const [garage, winners] = LAYERS;
+    if (state.activeLayer === garage) {
         activateButton('garage-button', tabsHandler);
         disableButton('winners-button', tabsHandler);
-        state.activeLayer = 'winners';
+        state.activeLayer = winners;
     } else {
         disableButton('garage-button', tabsHandler);
         activateButton('winners-button', tabsHandler);
-        state.activeLayer = 'garage';
+        state.activeLayer = garage;
     }
     switchLayers();
 }
