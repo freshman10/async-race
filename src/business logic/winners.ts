@@ -1,13 +1,14 @@
 import { getWinners } from '../API/api';
 import { state } from '../state/state';
-import { SortingColumn, sortingTypesEnum, WinnersResponse } from '../constants/types';
+import { SortingColumn, sortingTypesEnum } from '../constants/types';
 import renderWinners from '../render/renderWinners';
 import { controlsWinners } from './controls';
 import { eraseElement } from './garage';
 import { clearDOMStorage, elementDomStorage } from './utils';
-import { LAYERS, ONE } from '../constants/constants';
+import { LAYERS, ONE, PAGINATION_WINNERS } from '../constants/constants';
 
-export async function updateWinnersTable(winners: WinnersResponse): Promise<void> {
+export async function updateWinnersTable(): Promise<void> {
+    const winners = await getWinners(state.pageWinners, state.sort, state.order);
     eraseElement(LAYERS[1]);
     clearDOMStorage(LAYERS[1]);
     await renderWinners(winners);
@@ -63,32 +64,24 @@ export function addEventListenerSort(): void {
             arrangeSemaphore(target);
             state.order = getOrder(target);
             state.sort = getSortID(textContent);
-            const data = await getWinners(state.pageWinners, state.sort, state.order);
-            updateWinnersTable(data);
+            updateWinnersTable();
         });
     });
 }
 
-export function addEventListenerPREVButtonWinners(): void {
-    elementDomStorage.get('button-winners-prev')?.forEach((button) => {
-        button.addEventListener('click', async () => {
-            if (!button.classList.contains('inactive')) {
-                state.pageWinners -= ONE;
-                const data = await getWinners(state.pageWinners, state.sort, state.order);
-                updateWinnersTable(data);
-            }
-        });
-    });
-}
-
-export function addEventListenerNextButtonWinners(): void {
-    elementDomStorage.get('button-winners-next')?.forEach((button) => {
-        button.addEventListener('click', async () => {
-            if (!button.classList.contains('inactive')) {
-                state.pageWinners += ONE;
-                const data = await getWinners(state.pageWinners, state.sort, state.order);
-                updateWinnersTable(data);
-            }
+export function addEventListenerPaginationButtonWinners(): void {
+    PAGINATION_WINNERS.forEach((el) => {
+        elementDomStorage.get(el)?.forEach((button) => {
+            button.addEventListener('click', () => {
+                if (!button.classList.contains('inactive')) {
+                    if (button.classList.contains('button-next')) {
+                        state.pageWinners += ONE;
+                    } else {
+                        state.pageWinners -= ONE;
+                    }
+                    updateWinnersTable();
+                }
+            });
         });
     });
 }

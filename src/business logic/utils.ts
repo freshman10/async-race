@@ -1,4 +1,4 @@
-import { driveCar, getCar, getWinners, saveWinner, startEngine, stopEngine } from '../API/api';
+import { driveCar, getCar, saveWinner, startEngine, stopEngine } from '../API/api';
 import {
     CAR_MODELS,
     COLOR_HEX_LENGTH,
@@ -136,8 +136,7 @@ export function animation(endX: number, duration: number, target: HTMLElement, i
             const car = await getCar(id);
             showWinner(car, duration);
             await saveWinner(id, duration / MILLISECONDS_IN_ONE_SECOND);
-            const data = await getWinners(state.pageWinners, state.sort, state.order);
-            await updateWinnersTable(data);
+            await updateWinnersTable();
         }
     };
     tick();

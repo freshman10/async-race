@@ -1,4 +1,4 @@
-import getCars, { createCar, getWinners, updateCar } from '../API/api';
+import getCars, { createCar, updateCar } from '../API/api';
 import { LAST_INDEX, NUMBER_OF_CARS_TO_GENERATE, ONE, START } from '../constants/constants';
 import state from '../state/state';
 import { changeElementState, updateGarage } from './garage';
@@ -52,8 +52,7 @@ export function addUpdateButtonListener(): void {
                     color,
                 });
                 await updateGarage();
-                const data = await getWinners(state.pageWinners, state.sort, state.order);
-                updateWinnersTable(data);
+                updateWinnersTable();
             }
         });
     });

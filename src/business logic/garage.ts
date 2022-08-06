@@ -1,5 +1,5 @@
-import getCars, { deleteCar, deleteWinner, getCar, getWinners } from '../API/api';
-import { LAYERS, ONE } from '../constants/constants';
+import getCars, { deleteCar, deleteWinner, getCar } from '../API/api';
+import { LAYERS, ONE, PAGINATION_GARAGE } from '../constants/constants';
 import { Car } from '../constants/types';
 import { renderGarage } from '../render/renderGarage';
 import state from '../state/state';
@@ -89,30 +89,24 @@ export function addEventListenerRemoveButton(): void {
             await deleteCar(id);
             await updateGarage();
             await deleteWinner(id);
-            const data = await getWinners(state.pageWinners, state.sort, state.order);
-            updateWinnersTable(data);
+            updateWinnersTable();
         });
     });
 }
 
-export function addEventListenerPREVButton(): void {
-    elementDomStorage.get('button-garage-prev')?.forEach((button) => {
-        button.addEventListener('click', () => {
-            if (!button.classList.contains('inactive')) {
-                state.pageGarage -= ONE;
-                updateGarage();
-            }
-        });
-    });
-}
-
-export function addEventListenerNextButton(): void {
-    elementDomStorage.get('button-garage-next')?.forEach((button) => {
-        button.addEventListener('click', () => {
-            if (!button.classList.contains('inactive')) {
-                state.pageGarage += ONE;
-                updateGarage();
-            }
+export function addEventListenerPaginationButtonGarage(): void {
+    PAGINATION_GARAGE.forEach((el) => {
+        elementDomStorage.get(el)?.forEach((button) => {
+            button.addEventListener('click', () => {
+                if (!button.classList.contains('inactive')) {
+                    if (button.classList.contains('button-next')) {
+                        state.pageGarage += ONE;
+                    } else {
+                        state.pageGarage -= ONE;
+                    }
+                    updateGarage();
+                }
+            });
         });
     });
 }

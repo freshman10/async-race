@@ -7,15 +7,14 @@ import {
     isEmptyInputListener,
 } from './crud-box';
 import {
-    addEventListenerNextButton,
-    addEventListenerPREVButton,
+    addEventListenerPaginationButtonGarage,
     addEventListenerRemoveButton,
     addEventListenerSelectButton,
     addEventListenerStartEngine,
     addEventListenerStopEngine,
 } from './garage';
 import listenTabs from './tabs';
-import { addEventListenerNextButtonWinners, addEventListenerPREVButtonWinners, addEventListenerSort } from './winners';
+import { addEventListenerPaginationButtonWinners, addEventListenerSort } from './winners';
 
 export function controlsGarage(): void {
     listenTabs();
@@ -25,8 +24,7 @@ export function controlsGarage(): void {
     addUpdateButtonListener();
     addEventListenerRemoveButton();
     addEventListenerGenerateCars();
-    addEventListenerNextButton();
-    addEventListenerPREVButton();
+    addEventListenerPaginationButtonGarage();
     addEventListenerStartEngine();
     addEventListenerStopEngine();
     addEventListenerResetButton();
@@ -35,8 +33,7 @@ export function controlsGarage(): void {
 
 export function controlsWinners(): void {
     addEventListenerSort();
-    addEventListenerNextButtonWinners();
-    addEventListenerPREVButtonWinners();
+    addEventListenerPaginationButtonWinners();
 }
 
 export function addControls(): void {
