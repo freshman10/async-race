@@ -7,6 +7,7 @@ import {
     generateRandomColor,
     generateRandomModel,
     getInputData,
+    isActivePagination,
     startDrivingCar,
     stopCarEngine,
 } from './utils';
@@ -90,6 +91,10 @@ export function addEventListenerResetButton(): void {
                 if (counter === carsData.items.length - ONE) {
                     changeElementState('button-reset', false);
                     changeElementState('button-race', true);
+                    changeElementState('button-generate', true);
+                    changeElementState('button-select', true);
+                    changeElementState('button-remove', true);
+                    isActivePagination('garage');
                 }
                 counter += ONE;
             });
@@ -105,6 +110,11 @@ export function addEventListenerRaceButton(): void {
                 const cars = await getCars(state.pageGarage);
                 state.isRace = true;
                 changeElementState('button-reset', true);
+                changeElementState('button-generate', false);
+                changeElementState('button-select', false);
+                changeElementState('button-remove', false);
+                changeElementState('button-garage-prev', false);
+                changeElementState('button-garage-next', false);
                 const promises: Promise<unknown>[] = [];
                 cars.items.forEach((car) => {
                     if (car.id) {
