@@ -1,6 +1,7 @@
 import { getSortOrder } from '../business logic/utils';
 import { engine, garage, MAX_CARS, MAX_WINNERS, winners } from '../constants/constants';
 import { Car, CarsResponse, sortingTypesEnum, Speed, Winner, WinnersResponse } from '../constants/types';
+import state from '../state/state';
 
 export async function getCars(page: number, limit = MAX_CARS): Promise<CarsResponse> {
     const response = await fetch(`${garage}?_page=${page}&_limit=${limit}`);
@@ -119,8 +120,9 @@ export async function updateWinner(id: string, body: Winner): Promise<Winner> {
 }
 
 export async function saveWinner(id: string, time: number) {
-    const winner = await getWinner(id);
-    if (winner.id) {
+    const data = await getWinners(state.pageWinners, state.sort, state.order);
+    if (data.items.some((el) => el.id === Number(id))) {
+        const winner = await getWinner(id);
         winner.wins += 1;
         winner.time = winner.time < time ? winner.time : time;
         await updateWinner(id, winner);
