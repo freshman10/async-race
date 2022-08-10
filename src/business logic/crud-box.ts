@@ -3,6 +3,7 @@ import { LAST_INDEX, NUMBER_OF_CARS_TO_GENERATE, ONE, START } from '../constants
 import state from '../state/state';
 import { changeElementState, updateGarage } from './garage';
 import {
+    clearInputValue,
     elementDomStorage,
     generateRandomColor,
     generateRandomModel,
@@ -117,6 +118,10 @@ export function addEventListenerRaceButton(): void {
                 changeElementState('button-remove', false);
                 changeElementState('button-garage-prev', false);
                 changeElementState('button-garage-next', false);
+                clearInputValue('text-create');
+                clearInputValue('text-update');
+                changeElementState('button-create', false);
+                changeElementState('button-update', false);
                 const promises: Promise<unknown>[] = [];
                 cars.items.forEach((car) => {
                     if (car.id) {
