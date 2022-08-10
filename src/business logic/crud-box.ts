@@ -44,16 +44,18 @@ export function addNewCarButtonListener(): void {
 export function addUpdateButtonListener(): void {
     elementDomStorage.get('button-update')?.forEach((button) => {
         button.addEventListener('click', async () => {
-            const name = getInputData('text-update');
-            const color = getInputData('color-update');
-            const id = getInputData('text-update', true);
-            if (name && color) {
-                await updateCar(id, {
-                    name,
-                    color,
-                });
-                await updateGarage();
-                updateWinnersTable();
+            if (!button.classList.contains('inactive')) {
+                const name = getInputData('text-update');
+                const color = getInputData('color-update');
+                const id = getInputData('text-update', true);
+                if (name && color) {
+                    await updateCar(id, {
+                        name,
+                        color,
+                    });
+                    await updateGarage();
+                    updateWinnersTable();
+                }
             }
         });
     });
