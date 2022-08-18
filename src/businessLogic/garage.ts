@@ -50,22 +50,30 @@ function pushCarDataToInputs(carData: Car): void {
     setIDToInputElement('text-update', carData.id);
 }
 
-export function changeElementState(target: string, setActive: boolean, id?: string): void {
+function switchObjectState(obj: HTMLElement, setActive: boolean): void {
+    if (setActive) {
+        obj.classList.remove('inactive');
+    } else {
+        obj.classList.add('inactive');
+    }
+}
+
+function changeElementStateById(target: string, setActive: boolean, id: string): void {
     elementDomStorage.get(target)?.forEach((el) => {
-        if (id) {
-            if ((el as HTMLInputElement).value === id) {
-                if (setActive) {
-                    el.classList.remove('inactive');
-                } else {
-                    el.classList.add('inactive');
-                }
-            }
-        } else if (setActive) {
-            el.classList.remove('inactive');
-        } else {
-            el.classList.add('inactive');
+        if ((el as HTMLInputElement).value === id) {
+            switchObjectState(el, setActive);
         }
     });
+}
+
+export function changeElementState(target: string, setActive: boolean, id?: string): void {
+    if (id) {
+        changeElementStateById(target, setActive, id);
+    } else {
+        elementDomStorage.get(target)?.forEach((el) => {
+            switchObjectState(el, setActive);
+        });
+    }
 }
 
 export function addEventListenerSelectButton(): void {
