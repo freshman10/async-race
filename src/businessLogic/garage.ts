@@ -1,6 +1,6 @@
 import getCars, { deleteCar, deleteWinner, getCar } from '../API/api';
-import { LAYERS, ONE, PAGINATION_GARAGE } from '../constants/constants';
-import { Car } from '../constants/types';
+import { PAGINATION_GARAGE } from '../constants/constants';
+import { Car, Layers } from '../constants/types';
 import { renderGarage } from '../render/renderGarage';
 import state from '../state/state';
 import { controlsGarage } from './controls';
@@ -14,16 +14,16 @@ import {
 } from './utils';
 import updateWinnersTable from './winners';
 
-export function eraseElement(target: string): void {
-    elementDomStorage.get(target)?.forEach((garage) => {
-        garage.remove();
+export function eraseElement(target: number): void {
+    elementDomStorage.get(Layers[target])?.forEach((element) => {
+        element.remove();
     });
 }
 
 export async function updateGarage(): Promise<void> {
     const data = getCars(state.pageGarage);
-    eraseElement(LAYERS[0]);
-    clearDOMStorage(LAYERS[0]);
+    eraseElement(Layers.garage);
+    clearDOMStorage(Layers.garage);
     await renderGarage(data);
     controlsGarage();
 }
@@ -100,9 +100,9 @@ export function addEventListenerPaginationButtonGarage(): void {
             button.addEventListener('click', () => {
                 if (!button.classList.contains('inactive')) {
                     if (button.classList.contains('button-next')) {
-                        state.pageGarage += ONE;
+                        state.pageGarage += 1;
                     } else {
-                        state.pageGarage -= ONE;
+                        state.pageGarage -= 1;
                     }
                     updateGarage();
                 }

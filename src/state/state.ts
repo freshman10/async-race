@@ -1,8 +1,7 @@
-import { LAYERS } from '../constants/constants';
 import { sortingTypesEnum } from '../constants/types';
 
 export const state = {
-    activeLayer: LAYERS[0],
+    activeLayer: 0,
     pageGarage: 1,
     pageWinners: 1,
     sort: 'wins',

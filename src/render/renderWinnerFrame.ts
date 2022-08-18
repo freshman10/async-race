@@ -1,4 +1,4 @@
-import { createElement } from '../business logic/utils';
+import { createElement } from '../businessLogic/utils';
 import { MILLISECONDS_IN_ONE_SECOND } from '../constants/constants';
 
 export function renderWinnerFrame(name: string, time: number): void {

@@ -1,16 +1,16 @@
 import { getWinners } from '../API/api';
 import { state } from '../state/state';
-import { SortingColumn, sortingTypesEnum } from '../constants/types';
+import { Layers, SortingColumn, sortingTypesEnum } from '../constants/types';
 import renderWinners from '../render/renderWinners';
 import { controlsWinners } from './controls';
 import { eraseElement } from './garage';
 import { clearDOMStorage, elementDomStorage } from './utils';
-import { LAYERS, ONE, PAGINATION_WINNERS } from '../constants/constants';
+import { PAGINATION_WINNERS } from '../constants/constants';
 
 export async function updateWinnersTable(): Promise<void> {
     const winners = await getWinners(state.pageWinners, state.sort, state.order);
-    eraseElement(LAYERS[1]);
-    clearDOMStorage(LAYERS[1]);
+    eraseElement(Layers.winners);
+    clearDOMStorage(Layers.winners);
     await renderWinners(winners);
     controlsWinners();
 }
@@ -42,7 +42,7 @@ export function getSortID(textContent: string): string {
     if (textContent === 'Wins') {
         return SortingColumn[1];
     }
-    if (textContent.split(' ')[ONE] === 'time') {
+    if (textContent.split(' ')[1] === 'time') {
         return SortingColumn[2];
     }
     return SortingColumn[0];
@@ -75,9 +75,9 @@ export function addEventListenerPaginationButtonWinners(): void {
             button.addEventListener('click', () => {
                 if (!button.classList.contains('inactive')) {
                     if (button.classList.contains('button-next')) {
-                        state.pageWinners += ONE;
+                        state.pageWinners += 1;
                     } else {
-                        state.pageWinners -= ONE;
+                        state.pageWinners -= 1;
                     }
                     updateWinnersTable();
                 }

@@ -1,5 +1,5 @@
 import getCars, { getWinners } from './API/api';
-import addControls from './business logic/controls';
+import addControls from './businessLogic/controls';
 import './global.css';
 import renderPage from './render/renderPage';
 import { state } from './state/state';

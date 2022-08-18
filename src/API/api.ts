@@ -1,4 +1,4 @@
-import { getSortOrder } from '../business logic/utils';
+import { getSortOrder } from '../businessLogic/utils';
 import { engine, garage, MAX_CARS, MAX_WINNERS, winners } from '../constants/constants';
 import { Car, CarsResponse, sortingTypesEnum, Speed, Winner, WinnersResponse } from '../constants/types';
 import state from '../state/state';

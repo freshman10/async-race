@@ -4,18 +4,16 @@ import {
     COLOR_HEX_LENGTH,
     DELAY_TIME,
     FINISH_OFFSET,
-    LAYERS,
     LETTERS_HEX,
     MAX_CARS,
     MAX_WINNERS,
     MILLISECONDS_IN_ONE_SECOND,
-    ONE,
     SCREEN_UPDATE_FREQUENCY,
     START,
     STRING,
     WRONG_DATA,
 } from '../constants/constants';
-import { Car, CarStatusEnum, CreateElementInterface } from '../constants/types';
+import { Car, CarStatusEnum, CreateElementInterface, Layers } from '../constants/types';
 import { state } from '../state/state';
 import { renderWinnerFrame } from '../render/renderWinnerFrame';
 import { changeElementState } from './garage';
@@ -25,7 +23,7 @@ export const elementDomStorage = new Map<string, HTMLElement[]>();
 export const tagsStorage = new Map<string, string[]>();
 
 export function switchLayers(): void {
-    LAYERS.forEach((layer) => {
+    Object.keys(Layers).forEach((layer) => {
         elementDomStorage.get(layer)?.forEach((el) => {
             el.classList.toggle('upper-layer');
         });
@@ -66,13 +64,13 @@ export function generateRandomModel(): string {
     return `${models[id]} ${CAR_MODELS[models[id] as keyof typeof CAR_MODELS][type]}`;
 }
 
-export function updateMaxPage(items: number, tag: string): void {
-    if (tag === LAYERS[0]) {
-        const add = items % MAX_CARS > START ? ONE : START;
+export function updateMaxPage(items: number, tag: number): void {
+    if (tag === Layers.garage) {
+        const add = items % MAX_CARS > START ? 1 : START;
         const pages = Math.floor(items / MAX_CARS) + add;
         state.maxPagesGarage = pages;
-    } else if (tag === LAYERS[1]) {
-        const add = items % MAX_WINNERS > START ? ONE : START;
+    } else if (tag === Layers.winners) {
+        const add = items % MAX_WINNERS > START ? 1 : START;
         const pages = Math.floor(items / MAX_WINNERS) + add;
         state.maxPagesWinners = pages;
     }
@@ -82,18 +80,18 @@ export function capitalizeWord(str: string): string {
     return str[0].toUpperCase() + str.slice(1);
 }
 
-export function isActivePagination(tag: string): void {
-    const currentPage = `page${capitalizeWord(tag)}` as keyof typeof state;
-    const maxPages = `maxPages${capitalizeWord(tag)}` as keyof typeof state;
-    if (state[currentPage] === ONE) {
-        changeElementState(`button-${tag}-prev`, false);
+export function isActivePagination(tag: number): void {
+    const currentPage = `page${capitalizeWord(Layers[tag])}` as keyof typeof state;
+    const maxPages = `maxPages${capitalizeWord(Layers[tag])}` as keyof typeof state;
+    if (state[currentPage] === 1) {
+        changeElementState(`button-${Layers[tag]}-prev`, false);
     } else {
-        changeElementState(`button-${tag}-prev`, true);
+        changeElementState(`button-${Layers[tag]}-prev`, true);
     }
     if (state[currentPage] >= state[maxPages]) {
-        changeElementState(`button-${tag}-next`, false);
+        changeElementState(`button-${Layers[tag]}-next`, false);
     } else {
-        changeElementState(`button-${tag}-next`, true);
+        changeElementState(`button-${Layers[tag]}-next`, true);
     }
 }
 
@@ -199,18 +197,18 @@ function saveToMap<T, K>(map: Map<T, K[]>, key: T, value: K): void {
     }
 }
 
-export function clearDOMStorage(tag: string): void {
-    new Set(tagsStorage.get(tag))?.forEach((cls) => {
+export function clearDOMStorage(tag: number): void {
+    new Set(tagsStorage.get(Layers[tag]))?.forEach((cls) => {
         elementDomStorage.delete(cls);
     });
 }
 
-export function addToDOMStorage(element: HTMLElement, tag?: string): void {
+export function addToDOMStorage(element: HTMLElement, tag?: number): void {
     if (element && element.classList) {
         element.classList.forEach((cls) => {
             saveToMap(elementDomStorage, cls, element);
-            if (tag) {
-                saveToMap(tagsStorage, tag, cls);
+            if (tag !== undefined) {
+                saveToMap(tagsStorage, Layers[tag], cls);
             }
         });
     }

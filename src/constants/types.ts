@@ -31,7 +31,7 @@ export interface CreateElementInterface {
     classes?: string[];
     text?: string;
     attributes?: [string, string][];
-    tag?: string;
+    tag?: number;
 }
 
 export enum sortingTypesEnum {
@@ -49,4 +49,9 @@ export enum SortingColumn {
     'id',
     'wins',
     'time',
+}
+
+export enum Layers {
+    garage,
+    winners,
 }

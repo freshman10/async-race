@@ -1,5 +1,6 @@
 import getCars, { createCar, updateCar } from '../API/api';
-import { LAST_INDEX, NUMBER_OF_CARS_TO_GENERATE, ONE, START } from '../constants/constants';
+import { LAST_INDEX, NUMBER_OF_CARS_TO_GENERATE, START } from '../constants/constants';
+import { Layers } from '../constants/types';
 import state from '../state/state';
 import { changeElementState, updateGarage } from './garage';
 import {
@@ -18,12 +19,10 @@ export function isEmptyInputListener(target: string): void {
     elementDomStorage.get(target)?.forEach((input) => {
         input.addEventListener('keyup', () => {
             const createButton = elementDomStorage.get('button-create')?.slice(LAST_INDEX)[START];
-            if (createButton) {
-                if ((input as HTMLInputElement).value) {
-                    createButton.classList.remove('inactive');
-                } else {
-                    createButton.classList.add('inactive');
-                }
+            if ((input as HTMLInputElement).value) {
+                createButton?.classList.remove('inactive');
+            } else {
+                createButton?.classList.add('inactive');
             }
         });
     });
@@ -91,15 +90,15 @@ export function addEventListenerResetButton(): void {
                 if (car.id) {
                     await stopCarEngine(car.id.toString());
                 }
-                if (counter === carsData.items.length - ONE) {
+                if (counter === carsData.items.length - 1) {
                     changeElementState('button-reset', false);
                     changeElementState('button-race', true);
                     changeElementState('button-generate', true);
                     changeElementState('button-select', true);
                     changeElementState('button-remove', true);
-                    isActivePagination('garage');
+                    isActivePagination(Layers.garage);
                 }
-                counter += ONE;
+                counter += 1;
             });
         });
     });
