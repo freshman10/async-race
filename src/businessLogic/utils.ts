@@ -66,14 +66,20 @@ export function generateRandomModel(): string {
 }
 
 export function updateMaxPage(items: number, tag: number): void {
-    if (tag === Layers.garage) {
-        const add = items % MAX_CARS > START ? 1 : START;
-        const pages = Math.floor(items / MAX_CARS) + add;
-        state.maxPagesGarage = pages;
-    } else if (tag === Layers.winners) {
-        const add = items % MAX_WINNERS > START ? 1 : START;
-        const pages = Math.floor(items / MAX_WINNERS) + add;
-        state.maxPagesWinners = pages;
+    switch (tag) {
+        case Layers.garage: {
+            const add = items % MAX_CARS > START ? 1 : START;
+            const pages = Math.floor(items / MAX_CARS) + add;
+            state.maxPagesGarage = pages;
+            break;
+        }
+        case Layers.winners: {
+            const add = items % MAX_WINNERS > START ? 1 : START;
+            const pages = Math.floor(items / MAX_WINNERS) + add;
+            state.maxPagesWinners = pages;
+            break;
+        }
+        default:
     }
 }
 
