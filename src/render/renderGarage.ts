@@ -1,6 +1,6 @@
 import { changeCarStatus, createElement, isActivePagination, updateMaxPage } from '../businessLogic/utils';
 import { CONTAINER, CRUD_CONTAINER_CLASS } from '../constants/constants';
-import { Car, CarsResponse, Layers } from '../constants/types';
+import { Car, CarsResponse, CarStatusEnum, Layers } from '../constants/types';
 import { state } from '../state/state';
 
 require('../assets/icons/sports-car.svg');
@@ -194,7 +194,7 @@ function renderCar(parentElement: HTMLElement, car: Car): void {
         tag: Layers.garage,
     });
     if (car.id) {
-        changeCarStatus(car.id?.toString(), 'stopped');
+        changeCarStatus(car.id?.toString(), CarStatusEnum.stopped);
     }
 }
 

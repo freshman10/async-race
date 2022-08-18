@@ -105,7 +105,7 @@ export function isActivePagination(tag: number): void {
 export async function checkDriveStatus(id: string): Promise<void> {
     const data = await driveCar(id);
     if (!data.success) {
-        state.carStatus.set(id, CarStatusEnum[2]);
+        state.carStatus.set(id, CarStatusEnum.drive);
     }
 }
 
@@ -132,11 +132,11 @@ export function animation(endX: number, duration: number, target: HTMLElement, i
     const tick = async () => {
         currentX += dx;
         copy.style.transform = `translateX(${currentX}px)`;
-        if (currentX < endX && state.carStatus.get(id) === CarStatusEnum[0]) {
+        if (currentX < endX && state.carStatus.get(id) === CarStatusEnum.started) {
             requestAnimationFrame(tick);
-        } else if (state.carStatus.get(id) === CarStatusEnum[1]) {
+        } else if (state.carStatus.get(id) === CarStatusEnum.stopped) {
             copy.style.transform = `translateX(0px)`;
-        } else if (state.isRace && state.carStatus.get(id) === CarStatusEnum[0]) {
+        } else if (state.isRace && state.carStatus.get(id) === CarStatusEnum.started) {
             state.isRace = false;
             const car = await getCar(id);
             showWinner(car, duration);
@@ -159,7 +159,7 @@ export function getCarImageElementByID(id: string): HTMLElement | undefined {
     ).item;
 }
 
-export function changeCarStatus(id: string, status: string): void {
+export function changeCarStatus(id: string, status: number): void {
     const oldStatus = state.carStatus.get(id);
     if (oldStatus !== status) {
         state.carStatus.set(id, status);
@@ -173,13 +173,13 @@ export async function startCarEngine(id: string): Promise<void> {
     width = width ? width - FINISH_OFFSET : START;
     const carImageElement = getCarImageElementByID(id);
     if (width && carImageElement) {
-        changeCarStatus(id, CarStatusEnum[0]);
+        changeCarStatus(id, CarStatusEnum.started);
         animation(width, time, carImageElement, id);
     }
 }
 
 export async function stopCarEngine(id: string): Promise<void> {
-    changeCarStatus(id, CarStatusEnum[1]);
+    changeCarStatus(id, CarStatusEnum.stopped);
     changeElementState('button-start', true, id);
     changeElementState('button-stop', false, id);
     const car = getCarImageElementByID(id);
