@@ -35,17 +35,17 @@ function arrangeSemaphore(target: HTMLElement): void {
     classes.add('ascending');
 }
 
-export function getSortID(textContent: string): string {
+export function getSortID(textContent: string): number {
     if (!textContent) {
-        return SortingColumn[0];
+        return SortingColumn.id;
     }
-    if (textContent === 'Wins') {
-        return SortingColumn[1];
+    if (textContent.toLocaleLowerCase() === SortingColumn[1]) {
+        return SortingColumn.wins;
     }
-    if (textContent.split(' ')[1] === 'time') {
-        return SortingColumn[2];
+    if (textContent.split(' ')[1] === SortingColumn[2]) {
+        return SortingColumn.time;
     }
-    return SortingColumn[0];
+    return SortingColumn.id;
 }
 
 function getOrder(target: HTMLElement): sortingTypesEnum {

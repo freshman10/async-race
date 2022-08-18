@@ -1,10 +1,10 @@
-import { sortingTypesEnum } from '../constants/types';
+import { SortingColumn, sortingTypesEnum } from '../constants/types';
 
 export const state = {
     activeLayer: 0,
     pageGarage: 1,
     pageWinners: 1,
-    sort: 'wins',
+    sort: SortingColumn.wins,
     order: sortingTypesEnum.DESC,
     maxPagesGarage: 1,
     maxPagesWinners: 1,

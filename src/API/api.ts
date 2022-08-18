@@ -1,6 +1,6 @@
 import { getSortOrder } from '../businessLogic/utils';
 import { engine, garage, MAX_CARS, MAX_WINNERS, winners } from '../constants/constants';
-import { Car, CarsResponse, sortingTypesEnum, Speed, Winner, WinnersResponse } from '../constants/types';
+import { Car, CarsResponse, SortingColumn, sortingTypesEnum, Speed, Winner, WinnersResponse } from '../constants/types';
 import state from '../state/state';
 
 export async function getCars(page: number, limit = MAX_CARS): Promise<CarsResponse> {
@@ -71,12 +71,12 @@ export async function driveCar(id: string): Promise<{ success: boolean }> {
 
 export async function getWinners(
     page: number,
-    sort: string,
+    sort: SortingColumn,
     order: sortingTypesEnum,
     limit = MAX_WINNERS
 ): Promise<WinnersResponse> {
     const response = await fetch(
-        `${winners}?_page=${page}&_limit=${limit}${getSortOrder(sort, sortingTypesEnum[order])}`
+        `${winners}?_page=${page}&_limit=${limit}${getSortOrder(SortingColumn[sort], sortingTypesEnum[order])}`
     );
     const items = await response.json();
     return {
