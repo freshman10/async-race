@@ -64,7 +64,7 @@ export function addEventListenerSort(): void {
             arrangeSemaphore(target);
             state.order = getOrder(target);
             state.sort = getSortID(textContent);
-            updateWinnersTable();
+            await updateWinnersTable();
         });
     });
 }
@@ -72,14 +72,14 @@ export function addEventListenerSort(): void {
 export function addEventListenerPaginationButtonWinners(): void {
     PAGINATION_WINNERS.forEach((el) => {
         elementDomStorage.get(el)?.forEach((button) => {
-            button.addEventListener('click', () => {
+            button.addEventListener('click', async () => {
                 if (!button.classList.contains('inactive')) {
                     if (button.classList.contains('button-next')) {
                         state.pageWinners += 1;
                     } else {
                         state.pageWinners -= 1;
                     }
-                    updateWinnersTable();
+                    await updateWinnersTable();
                 }
             });
         });

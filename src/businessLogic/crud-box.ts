@@ -35,7 +35,7 @@ export function addNewCarButtonListener(): void {
             const color = getInputData('color-create');
             if (name && color) {
                 await createCar({ name, color });
-                updateGarage();
+                await updateGarage();
             }
         });
     });
@@ -54,7 +54,7 @@ export function addUpdateButtonListener(): void {
                         color,
                     });
                     await updateGarage();
-                    updateWinnersTable();
+                    await updateWinnersTable();
                 }
             }
         });
@@ -76,7 +76,7 @@ export function addEventListenerGenerateCars(): void {
                 );
             }
             await Promise.allSettled(promises);
-            updateGarage();
+            await updateGarage();
         });
     });
 }

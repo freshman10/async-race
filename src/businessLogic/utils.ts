@@ -193,7 +193,7 @@ export async function startDrivingCar(id: string): Promise<void> {
     changeElementState('button-start', false, id);
     changeElementState('button-stop', true, id);
     await startCarEngine(id);
-    checkDriveStatus(id);
+    await checkDriveStatus(id);
 }
 
 function saveToMap<T, K>(map: Map<T, K[]>, key: T, value: K): void {

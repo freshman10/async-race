@@ -97,7 +97,7 @@ export function addEventListenerRemoveButton(): void {
             await deleteCar(id);
             await updateGarage();
             await deleteWinner(id);
-            updateWinnersTable();
+            await updateWinnersTable();
         });
     });
 }
@@ -105,14 +105,14 @@ export function addEventListenerRemoveButton(): void {
 export function addEventListenerPaginationButtonGarage(): void {
     PAGINATION_GARAGE.forEach((el) => {
         elementDomStorage.get(el)?.forEach((button) => {
-            button.addEventListener('click', () => {
+            button.addEventListener('click', async () => {
                 if (!button.classList.contains('inactive')) {
                     if (button.classList.contains('button-next')) {
                         state.pageGarage += 1;
                     } else {
                         state.pageGarage -= 1;
                     }
-                    updateGarage();
+                    await updateGarage();
                 }
             });
         });
@@ -129,7 +129,7 @@ export function addEventListenerStartEngine(): void {
                 changeElementState('button-reset', true);
                 changeElementState('button-race', false);
                 await startCarEngine(id);
-                checkDriveStatus(id);
+                await checkDriveStatus(id);
             }
         });
     });
@@ -137,10 +137,10 @@ export function addEventListenerStartEngine(): void {
 
 export function addEventListenerStopEngine(): void {
     elementDomStorage.get('button-stop')?.forEach((button) => {
-        button.addEventListener('click', () => {
+        button.addEventListener('click', async () => {
             if (!button.classList.contains('inactive')) {
                 const id = (button as HTMLButtonElement).value;
-                stopCarEngine(id);
+                await stopCarEngine(id);
                 if (isEveryCarReady()) {
                     changeElementState('button-reset', false);
                     changeElementState('button-race', true);
