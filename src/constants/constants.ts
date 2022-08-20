@@ -38,3 +38,22 @@ export const sortingStates = {
     '0': 'descending',
     '1': 'ascending',
 };
+
+export const activationConfig = {
+    'button-reset': false,
+    'button-race': true,
+    'button-generate': true,
+    'button-select': true,
+    'button-remove': true,
+};
+
+export const deactivationConfig = {
+    'button-reset': true,
+    'button-generate': false,
+    'button-select': false,
+    'button-remove': false,
+    'button-garage-prev': false,
+    'button-garage-next': false,
+    'button-create': false,
+    'button-update': false,
+};

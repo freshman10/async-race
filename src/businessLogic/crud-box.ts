@@ -1,5 +1,11 @@
 import getCars, { createCar, updateCar } from '../API/api';
-import { LAST_INDEX, NUMBER_OF_CARS_TO_GENERATE, START } from '../constants/constants';
+import {
+    activationConfig,
+    deactivationConfig,
+    LAST_INDEX,
+    NUMBER_OF_CARS_TO_GENERATE,
+    START,
+} from '../constants/constants';
 import { Layers } from '../constants/types';
 import state from '../state/state';
 import { changeElementState, updateGarage } from './garage';
@@ -91,11 +97,9 @@ export function addEventListenerResetButton(): void {
                     await stopCarEngine(car.id.toString());
                 }
                 if (counter === carsData.items.length - 1) {
-                    changeElementState('button-reset', false);
-                    changeElementState('button-race', true);
-                    changeElementState('button-generate', true);
-                    changeElementState('button-select', true);
-                    changeElementState('button-remove', true);
+                    Object.entries(activationConfig).forEach((item) => {
+                        changeElementState(...item);
+                    });
                     isActivePagination(Layers.garage);
                 }
                 counter += 1;
@@ -111,16 +115,11 @@ export function addEventListenerRaceButton(): void {
                 button.classList.add('inactive');
                 const cars = await getCars(state.pageGarage);
                 state.isRace = true;
-                changeElementState('button-reset', true);
-                changeElementState('button-generate', false);
-                changeElementState('button-select', false);
-                changeElementState('button-remove', false);
-                changeElementState('button-garage-prev', false);
-                changeElementState('button-garage-next', false);
+                Object.entries(deactivationConfig).forEach((item) => {
+                    changeElementState(...item);
+                });
                 clearInputValue('text-create');
                 clearInputValue('text-update');
-                changeElementState('button-create', false);
-                changeElementState('button-update', false);
                 const promises: Promise<unknown>[] = [];
                 cars.items.forEach((car) => {
                     if (car.id) {

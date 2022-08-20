@@ -15,7 +15,7 @@ import {
 } from '../constants/constants';
 import { Car, CarStatusEnum, CreateElementInterface, Layers } from '../constants/types';
 import { state } from '../state/state';
-import { renderWinnerFrame } from '../render/renderWinnerFrame';
+import renderWinnerFrame from '../render/renderWinnerFrame';
 import { changeElementState } from './garage';
 import { updateWinnersTable } from './winners';
 
@@ -254,5 +254,3 @@ export function isEveryCarReady(): boolean {
     });
     return flag;
 }
-
-export default { switchLayers, getInputData };

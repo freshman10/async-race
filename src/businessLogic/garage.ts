@@ -149,5 +149,3 @@ export function addEventListenerStopEngine(): void {
         });
     });
 }
-
-export default { updateGarage };

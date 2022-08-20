@@ -253,5 +253,3 @@ export async function renderGarage(cars: Promise<CarsResponse>): Promise<void> {
     await renderCarsTrack(containerGarage, cars);
     renderPaginationButtons(containerGarage, Layers.garage);
 }
-
-export default { renderGarage, renderPageNumber, renderItemsLabel };
