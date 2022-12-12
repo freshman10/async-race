@@ -5,7 +5,7 @@
 1. Task: https://github.com/rolling-scopes-school/tasks/blob/master/tasks/async-race.md
 2. Screenshot:
 ![Screenshot_1](https://user-images.githubusercontent.com/70628469/183256938-b93bf8f7-2ce5-46a1-a9ce-5410d7616379.png)
-3. Deploy: https://rolling-scopes-school.github.io/freshman10-JSFE2022Q1/dist/
+3. Deploy: none
 4. Done 06.08.2022 / deadline 09.08.2022
 5. Score: 150 / 150
 
